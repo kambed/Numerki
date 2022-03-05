@@ -1,16 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
-
 <?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="pl.numerki.frontend.MainFormController">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Text?>
 
-    <Label fx:id="welcomeText"/>
-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
-</VBox>
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="352.0" prefWidth="239.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.numerki.frontend.MainFormController">
+    <Label layoutX="19.0" layoutY="28.0" text="Funkcja" />
+    <MenuBar layoutX="110.0" layoutY="24.0">
+        <Menu fx:id="function" mnemonicParsing="false" text="Wybierz funkcję">
+            <MenuItem onAction="#squareFunctionChosen" text="ax^2+bx+c" />
+            <MenuItem onAction="#sinusChosen" text="sin(x)" />
+            <MenuItem onAction="#exponentialChosen" text="a^x" />
+            <MenuItem mnemonicParsing="false" onAction="#complexFunctionChosen" text="sin(ax^2+bx+c)" />
+        </Menu>
+    </MenuBar>
+    <Label fx:id="labelA" layoutX="12.0" layoutY="71.0" text="a=" visible="false" />
+    <TextField fx:id="a" layoutX="41.0" layoutY="67.0" prefHeight="25.0" prefWidth="187.0" visible="false" />
+    <Label fx:id="labelB" layoutX="14.0" layoutY="112.0" text="b=" visible="false" />
+    <TextField fx:id="b" layoutX="38.0" layoutY="108.0" prefHeight="25.0" prefWidth="187.0" visible="false" />
+    <Label fx:id="labelC" layoutX="14.0" layoutY="157.0" text="c=" visible="false" />
+    <TextField fx:id="c" layoutX="38.0" layoutY="153.0" prefHeight="25.0" prefWidth="187.0" visible="false" />
+
+    <Text layoutX="15.0" layoutY="192.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Przedział testowy" />
+    <TextField fx:id="from" layoutX="12.0" layoutY="206.0" prefHeight="25.0" prefWidth="64.0" promptText="od" />
+    <TextField fx:id="to" layoutX="96.0" layoutY="206.0" prefHeight="25.0" prefWidth="64.0" promptText="do" />
+    <Text layoutX="82.0" layoutY="223.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" />
+
+    <Label layoutX="12.0" layoutY="249.0" text="Warunek zakończenia" />
+   <MenuBar layoutX="12.0" layoutY="265.0" prefHeight="25.0" prefWidth="196.0">
+      <menus>
+         <Menu fx:id="endCondition" mnemonicParsing="false" text="Wybierz warunek zakończenia">
+            <items>
+               <MenuItem onAction="#showIterations" text="zadana ilość iteracji" />
+               <MenuItem onAction="#showPrecision" text="zadana dokładność" />
+            </items>
+         </Menu>
+      </menus>
+   </MenuBar>
+    <Label fx:id="iterationsLabel" layoutX="15.0" layoutY="298.0" text="Maksymalna liczba iteracji" visible="false" />
+    <Label fx:id="precisionLabel" layoutX="13.0" layoutY="301.0" text="Dokładność wyniku" visible="false" />
+    <TextField fx:id="iterations" layoutX="17.0" layoutY="317.0" prefHeight="25.0" prefWidth="129.0" visible="false" />
+    <TextField fx:id="precision" layoutX="12.0" layoutY="318.0" prefHeight="25.0" prefWidth="115.0" visible="false" />
+
+    <Button layoutX="160.0" layoutY="296.0" mnemonicParsing="false" onAction="#getZeroPositions" prefHeight="39.0" prefWidth="64.0" text="Start" />
+</Pane>
