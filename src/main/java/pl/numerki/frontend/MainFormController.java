@@ -3,18 +3,29 @@ package pl.numerki.frontend;
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import pl.numerki.backend.Bisection;
-import pl.numerki.backend.Functions;
+import pl.numerki.backend.SecantMethod;
+import pl.numerki.backend.exceptions.BisectionException;
+import pl.numerki.backend.exceptions.SecantException;
+
+import java.util.function.Function;
+
+import static pl.numerki.backend.Functions.*;
 
 public class MainFormController {
 
     public static final String MAIN_FORM_RESOURCE = "MainForm.fxml";
     public static final String MAIN_FORM_TITLE = "Zadanie 1";
-    public TextField iterations;
-    public TextField precision;
-    public TextField from;
-    public TextField to;
 
     public Menu function;
+    public Menu endCondition;
+
+    public Label iterationsLabel;
+    public Label precisionLabel;
+    public TextField iterations;
+    public TextField precision;
+
+    public TextField from;
+    public TextField to;
 
     public Label labelA;
     public TextField a;
@@ -24,11 +35,74 @@ public class MainFormController {
 
     public Label labelC;
     public TextField c;
-    public Label iterationsLabel;
-    public Label precisionLabel;
-    public Menu endCondition;
 
     private String chosenFunction;
+
+    public void getZeroPositions() {
+        boolean bisectionException = false;
+        boolean secantException = false;
+        double resultBisection = 0;
+        double resultSecant = 0;
+        try {
+            Function<Double, Double> function = getFunction();
+            double from, to;
+            try {
+                from = Double.parseDouble(this.from.getText());
+                to = Double.parseDouble(this.to.getText());
+            } catch (NumberFormatException e) {
+                throw new Exception("Nie podano liczb");
+            }
+            // Check different signs on end of compartments
+            if (function.apply(from) * function.apply(to) >= 0) {
+                throw new Exception("Wartości funckcji w predziałach końcowych muszą mieć różne znaki");
+            }
+            if (!this.precision.getText().isEmpty()) {
+                double precision = Double.parseDouble(this.precision.getText());
+                resultBisection = Bisection.getZeroPositionsWithPrecisionCondition(function, from, to, precision);
+                resultSecant = SecantMethod.getZeroPositionsWithPrecisionCondition(function, from, to, precision);
+            } else if (!this.iterations.getText().isEmpty()) {
+                int iterations = Integer.parseInt(this.iterations.getText());
+                resultBisection = Bisection.getZeroPositionsWithIterationCondition(function, from, to, iterations);
+                resultSecant = SecantMethod.getZeroPositionsWithIterationCondition(function, from, to, iterations);
+            }
+        } catch (BisectionException e) {
+            bisectionException = true;
+        } catch (SecantException e) {
+            secantException = true;
+        } catch (Exception e) {
+            AlertBox.alertShow(
+                    "Miejsce zerowe na zadanym przedziale",
+                    e.getMessage(),
+                    Alert.AlertType.INFORMATION
+            );
+            return;
+        }
+
+        AlertBox.alertShow(
+                "Miejsce zerowe na zadanym przedziale",
+                "Miejsce zerowe na zadanym przedziale wynosi: \n" +
+                        "Metoda bisekcji: " + (bisectionException ? "NanN" : resultBisection) +
+                        "\nMetoda siecznych: " + (secantException ? "NaN" : resultSecant),
+                Alert.AlertType.INFORMATION
+        );
+    }
+
+    private Function<Double, Double> getFunction() throws Exception {
+        double a, b, c;
+        try {
+            a = Double.parseDouble(this.a.getText());
+            b = Double.parseDouble(this.b.getText());
+            c = Double.parseDouble(this.c.getText());
+        } catch (NumberFormatException e) {
+            throw new Exception("Nie podano liczb");
+        }
+        return switch (chosenFunction) {
+            case "ax^2+bx+c" -> squareFunction(a, b, c);
+            case "sin(x)" -> sinFunction();
+            case "a^x" -> exponentialFunction(a);
+            case "sin(ax^2+bx+c)" -> complexFunction(a, b, c);
+        };
+    }
 
     public void squareFunctionChosen(ActionEvent actionEvent) {
         setChosenFunction(actionEvent);
@@ -73,86 +147,6 @@ public class MainFormController {
     private void setChosenFunction(ActionEvent actionEvent) {
         function.setText(((MenuItem) actionEvent.getSource()).getText());
         chosenFunction = ((MenuItem) actionEvent.getSource()).getText();
-    }
-
-    public void getZeroPositions() {
-        double result = 0;
-        try {
-            if(!this.precision.getText().isEmpty()) {
-                result = getPrecisionResult();
-            } else if (!this.iterations.getText().isEmpty()) {
-                result = getIterationResult();
-            }
-        } catch (Exception e) {
-            AlertBox.alertShow(
-                "Miejsce zerowe na zadanym przedziale",
-                    "Nie odnaleziono miejsca zeroewgo dla zadanych parmetrów",
-                    Alert.AlertType.INFORMATION
-            );
-            return;
-        }
-
-        AlertBox.alertShow(
-                "Miejsce zerowe na zadanym przedziale",
-                "Miejsce zerowe na zadanym przedziale wynosi " + String.valueOf(result),
-                Alert.AlertType.INFORMATION
-        );
-    }
-
-    private double getIterationResult() throws Exception {
-        double a = Double.parseDouble(this.a.getText());
-        double b = Double.parseDouble(this.b.getText());
-        double c = Double.parseDouble(this.c.getText());
-        double from = Double.parseDouble(this.from.getText());
-        double to = Double.parseDouble(this.to.getText());
-        int iteration = Integer.parseInt(this.iterations.getText());
-        return switch (chosenFunction) {
-            case "ax^2+bx+c" -> Bisection.getZeroPositionsWithIterationCondition(
-                    Functions.squareFunction(a, b, c),
-                    from, to, iteration
-            );
-            case "sin(x)" -> Bisection.getZeroPositionsWithIterationCondition(
-                    Functions.sinFunction(),
-                    from, to, iteration
-            );
-            case "a^x" -> Bisection.getZeroPositionsWithIterationCondition(
-                    Functions.exponentialFunction(a),
-                    from, to, iteration
-            );
-            case "sin(ax^2+bx+c)" -> Bisection.getZeroPositionsWithIterationCondition(
-                    Functions.complexFunction(a, b, c),
-                    from, to, iteration
-            );
-            default -> throw new Exception();
-        };
-    }
-
-    private double getPrecisionResult() throws Exception {
-        double a = Double.parseDouble(this.a.getText());
-        double b = Double.parseDouble(this.b.getText());
-        double c = Double.parseDouble(this.c.getText());
-        double from = Double.parseDouble(this.from.getText());
-        double to = Double.parseDouble(this.to.getText());
-        double precision = Double.parseDouble(this.precision.getText());
-        return switch (chosenFunction) {
-            case "ax^2+bx+c" -> Bisection.getZeroPositionsWithPrecisionCondition(
-                    Functions.squareFunction(a, b, c),
-                    from, to, precision
-            );
-            case "sin(x)" -> Bisection.getZeroPositionsWithPrecisionCondition(
-                    Functions.sinFunction(),
-                    from, to, precision
-            );
-            case "a^x" -> Bisection.getZeroPositionsWithPrecisionCondition(
-                    Functions.exponentialFunction(a),
-                    from, to, precision
-            );
-            case "sin(ax^2+bx+c)" -> Bisection.getZeroPositionsWithPrecisionCondition(
-                    Functions.complexFunction(a, b, c),
-                    from, to, precision
-            );
-            default -> throw new Exception();
-        };
     }
 
     public void showIterations(ActionEvent actionEvent) {
