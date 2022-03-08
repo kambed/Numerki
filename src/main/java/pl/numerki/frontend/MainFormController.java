@@ -80,21 +80,25 @@ public class MainFormController {
     }
 
     private Function<Double, Double> getFunction() throws Exception {
-        double a, b, c;
         try {
-            a = Double.parseDouble(this.a.getText());
-            b = Double.parseDouble(this.b.getText());
-            c = Double.parseDouble(this.c.getText());
+            return switch (chosenFunction) {
+                case "ax^2+bx+c" -> squareFunction(
+                        Double.parseDouble(a.getText()),
+                        Double.parseDouble(b.getText()),
+                        Double.parseDouble(c.getText())
+                );
+                case "sin(x)" -> sinFunction();
+                case "a^x" -> exponentialFunction(Double.parseDouble(a.getText()));
+                case "sin(ax^2+bx+c)" -> complexFunction(
+                        Double.parseDouble(a.getText()),
+                        Double.parseDouble(b.getText()),
+                        Double.parseDouble(c.getText())
+                );
+                default -> throw new Exception("Wybrano złą funkcję");
+            };
         } catch (NumberFormatException e) {
             throw new Exception("Nie podano liczb");
         }
-        return switch (chosenFunction) {
-            case "ax^2+bx+c" -> squareFunction(a, b, c);
-            case "sin(x)" -> sinFunction();
-            case "a^x" -> exponentialFunction(a);
-            case "sin(ax^2+bx+c)" -> complexFunction(a, b, c);
-            default -> throw new Exception("Wybrano złą funkcję");
-        };
     }
 
     public void squareFunctionChosen(ActionEvent actionEvent) {
