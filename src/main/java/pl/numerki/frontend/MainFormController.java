@@ -4,8 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import pl.numerki.backend.Bisection;
 import pl.numerki.backend.SecantMethod;
-import pl.numerki.backend.exceptions.BisectionException;
-import pl.numerki.backend.exceptions.SecantException;
+import pl.numerki.backend.ZeroPosition;
 
 import java.util.function.Function;
 
@@ -39,8 +38,6 @@ public class MainFormController {
     private String chosenFunction;
 
     public void getZeroPositions() {
-        boolean bisectionException = false;
-        boolean secantException = false;
         double resultBisection = 0;
         double resultSecant = 0;
         try {
@@ -52,8 +49,7 @@ public class MainFormController {
             } catch (NumberFormatException e) {
                 throw new Exception("Nie podano liczb");
             }
-            // Check different signs on end of compartments
-            if (function.apply(from) * function.apply(to) >= 0) {
+            if (!ZeroPosition.checkDifferentValuesSign(function, from, to)) {
                 throw new Exception("Wartości funckcji w predziałach końcowych muszą mieć różne znaki");
             }
             if (!this.precision.getText().isEmpty()) {
@@ -65,10 +61,6 @@ public class MainFormController {
                 resultBisection = Bisection.getZeroPositionsWithIterationCondition(function, from, to, iterations);
                 resultSecant = SecantMethod.getZeroPositionsWithIterationCondition(function, from, to, iterations);
             }
-        } catch (BisectionException e) {
-            bisectionException = true;
-        } catch (SecantException e) {
-            secantException = true;
         } catch (Exception e) {
             AlertBox.alertShow(
                     "Miejsce zerowe na zadanym przedziale",
@@ -81,8 +73,8 @@ public class MainFormController {
         AlertBox.alertShow(
                 "Miejsce zerowe na zadanym przedziale",
                 "Miejsce zerowe na zadanym przedziale wynosi: \n" +
-                        "Metoda bisekcji: " + (bisectionException ? "NanN" : resultBisection) +
-                        "\nMetoda siecznych: " + (secantException ? "NaN" : resultSecant),
+                        "Metoda bisekcji: " + resultBisection +
+                        "\nMetoda siecznych: " + resultSecant,
                 Alert.AlertType.INFORMATION
         );
     }
@@ -101,47 +93,28 @@ public class MainFormController {
             case "sin(x)" -> sinFunction();
             case "a^x" -> exponentialFunction(a);
             case "sin(ax^2+bx+c)" -> complexFunction(a, b, c);
+            default -> throw new Exception("Wybrano złą funkcję");
         };
     }
 
     public void squareFunctionChosen(ActionEvent actionEvent) {
         setChosenFunction(actionEvent);
-        labelA.setVisible(true);
-        labelB.setVisible(true);
-        labelC.setVisible(true);
-        a.setVisible(true);
-        b.setVisible(true);
-        c.setVisible(true);
+        setParametersVisibility(true, true, true);
     }
 
     public void sinusChosen(ActionEvent actionEvent) {
         setChosenFunction(actionEvent);
-        labelA.setVisible(false);
-        labelB.setVisible(false);
-        labelC.setVisible(false);
-        a.setVisible(false);
-        b.setVisible(false);
-        c.setVisible(false);
+        setParametersVisibility(false, false, false);
     }
 
     public void exponentialChosen(ActionEvent actionEvent) {
         setChosenFunction(actionEvent);
-        labelA.setVisible(true);
-        labelB.setVisible(false);
-        labelC.setVisible(false);
-        a.setVisible(true);
-        b.setVisible(false);
-        c.setVisible(false);
+        setParametersVisibility(true, false, false);
     }
 
     public void complexFunctionChosen(ActionEvent actionEvent) {
         setChosenFunction(actionEvent);
-        labelA.setVisible(true);
-        labelB.setVisible(true);
-        labelC.setVisible(true);
-        a.setVisible(true);
-        b.setVisible(true);
-        c.setVisible(true);
+        setParametersVisibility(true, true, true);
     }
 
     private void setChosenFunction(ActionEvent actionEvent) {
@@ -150,20 +123,43 @@ public class MainFormController {
     }
 
     public void showIterations(ActionEvent actionEvent) {
-        iterations.setVisible(true);
-        iterationsLabel.setVisible(true);
-        precisionLabel.setVisible(false);
-        precision.setVisible(false);
-        precision.setText("");
+        setEndConditionVisibility(false, true);
         endCondition.setText(((MenuItem) actionEvent.getSource()).getText());
     }
 
     public void showPrecision(ActionEvent actionEvent) {
-        precisionLabel.setVisible(true);
-        precision.setVisible(true);
-        iterations.setVisible(false);
-        iterationsLabel.setVisible(false);
-        iterations.setText("");
+        setEndConditionVisibility(true,false);
         endCondition.setText(((MenuItem) actionEvent.getSource()).getText());
+    }
+
+    private void setParametersVisibility(boolean a, boolean b, boolean c) {
+        labelA.setVisible(a);
+        labelB.setVisible(b);
+        labelC.setVisible(c);
+        this.a.setVisible(a);
+        this.b.setVisible(b);
+        this.c.setVisible(c);
+        if (!a) {
+            this.a.setText("");
+        }
+        if (!b) {
+            this.b.setText("");
+        }
+        if (!c) {
+            this.c.setText("");
+        }
+    }
+
+    private void  setEndConditionVisibility (boolean precision, boolean iterations) {
+        precisionLabel.setVisible(precision);
+        this.precision.setVisible(precision);
+        this.iterations.setVisible(iterations);
+        iterationsLabel.setVisible(iterations);
+        if (!precision) {
+            this.precision.setText("");
+        }
+        if(!iterations) {
+            this.iterations.setText("");
+        }
     }
 }

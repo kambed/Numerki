@@ -1,28 +1,27 @@
 package pl.numerki.backend;
 
-import pl.numerki.backend.exceptions.SecantException;
-
 import java.util.function.Function;
 
 import static java.lang.Math.abs;
 
-public class SecantMethod {
+public class SecantMethod extends ZeroPosition {
 
     public static double getZeroPositionsWithPrecisionCondition(
             Function<Double, Double> function,
             double leftEndOfCompartment,
             double rightEndOfCompartment,
             double epsilon
-    ) throws Exception {
+    ) {
         double leftValue = function.apply(leftEndOfCompartment);
         double rightValue = function.apply(rightEndOfCompartment);
         while (
                 abs(rightEndOfCompartment - leftEndOfCompartment) > epsilon
                         && leftEndOfCompartment != rightEndOfCompartment
         ) {
-            double secantWithOXCrossPoint = (leftValue * rightEndOfCompartment - rightValue * leftEndOfCompartment) / (leftValue - rightValue);
+            double secantWithOXCrossPoint = getSecantWithOXCrossPoint(leftValue, rightEndOfCompartment,
+                    rightValue, leftEndOfCompartment);
             double valueInCrossPoint = function.apply(secantWithOXCrossPoint);
-            if (abs(valueInCrossPoint) < epsilon) {
+            if (valueInCrossPoint == 0) {
                 return secantWithOXCrossPoint;
             }
             leftEndOfCompartment = rightEndOfCompartment;
@@ -30,7 +29,7 @@ public class SecantMethod {
             rightEndOfCompartment = secantWithOXCrossPoint;
             rightValue = valueInCrossPoint;
         }
-        throw new SecantException();
+        return getSecantWithOXCrossPoint(leftValue, rightEndOfCompartment, rightValue, leftEndOfCompartment);
     }
 
     public static double getZeroPositionsWithIterationCondition(
@@ -42,7 +41,8 @@ public class SecantMethod {
         double leftValue = function.apply(leftEndOfCompartment);
         double rightValue = function.apply(rightEndOfCompartment);
         for (int i = 0; i < iterations && leftEndOfCompartment != rightEndOfCompartment; i++) {
-            double secantWithOXCrossPoint = (leftValue * rightEndOfCompartment - rightValue * leftEndOfCompartment) / (leftValue - rightValue);
+            double secantWithOXCrossPoint = getSecantWithOXCrossPoint(leftValue, rightEndOfCompartment,
+                    rightValue, leftEndOfCompartment);
             double valueInCrossPoint = function.apply(secantWithOXCrossPoint);
             if (valueInCrossPoint == 0) {
                 return secantWithOXCrossPoint;
@@ -52,6 +52,11 @@ public class SecantMethod {
             rightEndOfCompartment = secantWithOXCrossPoint;
             rightValue = valueInCrossPoint;
         }
+        return getSecantWithOXCrossPoint(leftValue, rightEndOfCompartment, rightValue, leftEndOfCompartment);
+    }
+
+    private static double getSecantWithOXCrossPoint(double leftValue, double rightEndOfCompartment,
+                                                    double rightValue, double leftEndOfCompartment) {
         return (leftValue * rightEndOfCompartment - rightValue * leftEndOfCompartment) / (leftValue - rightValue);
     }
 }
