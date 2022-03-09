@@ -8,39 +8,74 @@ import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
+import java.awt.*;
 import java.util.function.Function;
 
 public class ChartGenerator {
     public static JFreeChart generatePlot(
             Function<Double, Double> function, double leftCompartment, double rightCompartment,
-            double bisectionZeroPosition, double secantZeroPosition
+            double bisectionZeroPosition, double secantZeroPosition, String chartName
     ) {
-        XYSeries series = new XYSeries(0);
+        XYSeries functionSeries = new XYSeries("Function");
         double unit = (rightCompartment - leftCompartment) / 1000;
+        double minValue = function.apply(leftCompartment);
+        double maxValue = function.apply(leftCompartment);
         for (double i = leftCompartment; i < rightCompartment; i += unit) {
-            series.add(i, function.apply(i));
+            double value = function.apply(i);
+            functionSeries.add(i, value);
+            if (value < minValue) {
+                minValue = value;
+            }
+            if (value > maxValue) {
+                maxValue = value;
+            }
         }
 
-        XYSeries compartmentsAndZeroPosition = new XYSeries(1);
-        compartmentsAndZeroPosition.add(bisectionZeroPosition, 0);
-        compartmentsAndZeroPosition.add(secantZeroPosition, 0);
+        XYSeries zeroPositionSeries = new XYSeries("Zero positions");
+        zeroPositionSeries.add(bisectionZeroPosition, function.apply(bisectionZeroPosition));
+        zeroPositionSeries.add(secantZeroPosition, function.apply(secantZeroPosition));
+
+        XYSeries xAxis = new XYSeries("X-axis");
+        xAxis.add(leftCompartment,0);
+        xAxis.add(rightCompartment,0);
+        xAxis.add(0,0);
+
+        XYSeries yAxis = new XYSeries("Y-axis");
+        yAxis.add(0, minValue);
+        yAxis.add(0, maxValue);
+        yAxis.add(0,0);
 
         XYSeriesCollection seriesCollection = new XYSeriesCollection();
-        seriesCollection.addSeries(series);
-        seriesCollection.addSeries(compartmentsAndZeroPosition);
+        seriesCollection.addSeries(functionSeries);
+        seriesCollection.addSeries(zeroPositionSeries);
+        seriesCollection.addSeries(xAxis);
+        seriesCollection.addSeries(yAxis);
 
         JFreeChart chart = ChartFactory.createXYLineChart(
-                "Chart", "x", "y", seriesCollection,
-                PlotOrientation.VERTICAL, false, true, false
+                "f(x) = " + chartName, "X", "Y", seriesCollection,
+                PlotOrientation.VERTICAL, true, true, false
         );
         XYPlot plot = (XYPlot) chart.getPlot();
         XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
-        renderer.setSeriesLinesVisible(0, true);
-        renderer.setSeriesShapesVisible(0, false);
-        renderer.setSeriesLinesVisible(1, false);
-        renderer.setSeriesShapesVisible(1, true);
+
+        changeVisibility(renderer, 0, true);
+        changeVisibility(renderer, 1, false);
+        formatAxis(renderer,2);
+        formatAxis(renderer,3);
+
         plot.setRenderer(renderer);
 
         return chart;
+    }
+
+    private static void formatAxis(XYLineAndShapeRenderer renderer, int series) {
+        changeVisibility(renderer, series, true);
+        renderer.setSeriesPaint(series, new Color(0x00, 0x00, 0x00));
+        renderer.setSeriesStroke(series, new BasicStroke(0.5f));
+    }
+
+    private static void changeVisibility(XYLineAndShapeRenderer renderer, int series, boolean displayLine) {
+        renderer.setSeriesLinesVisible(series, displayLine);
+        renderer.setSeriesShapesVisible(series, !displayLine);
     }
 }
