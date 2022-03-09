@@ -1,9 +1,9 @@
 package pl.numerki.frontend;
 
-import javafx.scene.control.Alert;
 import pl.numerki.backend.Bisection;
 import pl.numerki.backend.Functions;
 import pl.numerki.backend.SecantMethod;
+import pl.numerki.backend.ZeroPosition;
 
 import java.util.Scanner;
 import java.util.function.Function;
@@ -13,6 +13,7 @@ public class Main {
         System.out.println("Podaj liczbe zlozen");
         Scanner s = new Scanner(System.in);
         int numOfAssemblies = s.nextInt();
+
         Function<Double, Double>[] function = new Function[numOfAssemblies];
         for (int j = 0; j < numOfAssemblies; j++) {
             System.out.println(getMenu());
@@ -33,12 +34,23 @@ public class Main {
                     double c = s.nextDouble();
                     function[j] = Functions.squareFunction(a, b, c);
                 }
+                default -> {
+                    System.out.println("Wybrano nie prawidlowa opcje");
+                    return;
+                }
             }
         }
         Function<Double, Double> assembledFunction = assemble(function);
+
         System.out.println("Podaj przedzial testowy");
         double leftCompartment = s.nextDouble();
         double rightCompartment = s.nextDouble();
+
+        if (!ZeroPosition.checkDifferentValuesSign(assembledFunction, leftCompartment, rightCompartment)) {
+            System.out.println("Wartości funckcji w predziałach końcowych muszą mieć różne znaki");
+            return;
+        }
+
         System.out.println("Wybierz warunek zakonczenia \n" + getEnding());
         int choose = s.nextInt();
         switch (choose) {
