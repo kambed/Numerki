@@ -5,18 +5,18 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="352.0" prefWidth="239.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.numerki.frontend.MainFormController">
-    <Label layoutX="19.0" layoutY="28.0" text="Funkcja" />
-    <MenuBar layoutX="110.0" layoutY="24.0">
-        <Menu fx:id="function" mnemonicParsing="false" text="Wybierz funkcję">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="352.0" prefWidth="478.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.numerki.frontend.MainFormController">
+    <Label layoutX="18.0" layoutY="71.0" prefHeight="17.0" prefWidth="103.0" text="k(j(h(g(f(x)))))" />
+    <MenuBar layoutX="371.0" layoutY="67.0" prefHeight="26.0" prefWidth="92.0">
+        <Menu fx:id="function" mnemonicParsing="false" text="f(x)">
             <MenuItem onAction="#squareFunctionChosen" text="ax^2+bx+c" />
             <MenuItem onAction="#sinusChosen" text="sin(x)" />
             <MenuItem onAction="#exponentialChosen" text="a^x" />
-            <MenuItem mnemonicParsing="false" onAction="#complexFunctionChosen" text="sin(ax^2+bx+c)" />
         </Menu>
     </MenuBar>
     <Label fx:id="labelA" layoutX="12.0" layoutY="71.0" text="a=" visible="false" />
@@ -48,4 +48,54 @@
     <TextField fx:id="precision" layoutX="12.0" layoutY="318.0" prefHeight="25.0" prefWidth="115.0" visible="false" />
 
     <Button layoutX="160.0" layoutY="296.0" mnemonicParsing="false" onAction="#getZeroPositions" prefHeight="39.0" prefWidth="64.0" text="Start" />
+   <Label layoutX="18.0" layoutY="14.0" text="Liczba złożeń:" />
+   <RadioButton layoutX="103.0" layoutY="14.0" mnemonicParsing="false" text="1" />
+   <RadioButton layoutX="135.0" layoutY="14.0" mnemonicParsing="false" text="2" />
+   <RadioButton layoutX="171.0" layoutY="14.0" mnemonicParsing="false" text="3" />
+   <RadioButton layoutX="208.0" layoutY="14.0" mnemonicParsing="false" text="4" />
+   <RadioButton layoutX="239.0" layoutY="14.0" mnemonicParsing="false" text="5" />
+   <MenuBar layoutX="315.0" layoutY="67.0" prefHeight="26.0" prefWidth="48.0">
+      <menus>
+         <Menu fx:id="function1" mnemonicParsing="false" text="f(x)">
+            <items>
+               <MenuItem onAction="#squareFunctionChosen" text="ax^2+bx+c" />
+               <MenuItem onAction="#sinusChosen" text="sin(x)" />
+               <MenuItem onAction="#exponentialChosen" text="a^x" />
+            </items>
+         </Menu>
+      </menus>
+   </MenuBar>
+   <MenuBar layoutX="260.0" layoutY="67.0" prefHeight="26.0" prefWidth="48.0">
+      <menus>
+         <Menu fx:id="function2" mnemonicParsing="false" text="f(x)">
+            <items>
+               <MenuItem onAction="#squareFunctionChosen" text="ax^2+bx+c" />
+               <MenuItem onAction="#sinusChosen" text="sin(x)" />
+               <MenuItem onAction="#exponentialChosen" text="a^x" />
+            </items>
+         </Menu>
+      </menus>
+   </MenuBar>
+   <MenuBar layoutX="204.0" layoutY="67.0" prefHeight="26.0" prefWidth="48.0">
+      <menus>
+         <Menu fx:id="function3" mnemonicParsing="false" text="f(x)">
+            <items>
+               <MenuItem onAction="#squareFunctionChosen" text="ax^2+bx+c" />
+               <MenuItem onAction="#sinusChosen" text="sin(x)" />
+               <MenuItem onAction="#exponentialChosen" text="a^x" />
+            </items>
+         </Menu>
+      </menus>
+   </MenuBar>
+   <MenuBar layoutX="103.0" layoutY="67.0" prefHeight="26.0" prefWidth="92.0">
+      <menus>
+         <Menu fx:id="function4" mnemonicParsing="false" text="f(x)">
+            <items>
+               <MenuItem onAction="#squareFunctionChosen" text="ax^2+bx+c" />
+               <MenuItem onAction="#sinusChosen" text="sin(x)" />
+               <MenuItem onAction="#exponentialChosen" text="a^x" />
+            </items>
+         </Menu>
+      </menus>
+   </MenuBar>
 </Pane>

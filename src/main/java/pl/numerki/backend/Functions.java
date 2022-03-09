@@ -14,8 +14,4 @@ public class Functions {
     public static Function<Double, Double> exponentialFunction(double a) {
         return aDouble -> Math.pow(a, aDouble);
     }
-
-    public static Function<Double, Double> complexFunction(double a, double b, double c) {
-        return aDouble -> sinFunction().apply(squareFunction(a, b, c).apply(aDouble));
-    }
 }
