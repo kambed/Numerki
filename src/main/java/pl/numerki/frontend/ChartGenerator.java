@@ -7,6 +7,7 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
+import pl.numerki.backend.ZeroPosition;
 
 import java.awt.*;
 import java.util.function.Function;
@@ -38,19 +39,20 @@ public class ChartGenerator {
         XYSeries xAxis = new XYSeries("X-axis");
         xAxis.add(leftCompartment,0);
         xAxis.add(rightCompartment,0);
-        xAxis.add(0,0);
-
-        XYSeries yAxis = new XYSeries("Y-axis");
-        yAxis.add(0, minValue);
-        yAxis.add(0, maxValue);
-        yAxis.add(0,0);
 
         XYSeriesCollection seriesCollection = new XYSeriesCollection();
         seriesCollection.addSeries(functionSeries);
         seriesCollection.addSeries(zeroPositionSeries);
         seriesCollection.addSeries(xAxis);
-        seriesCollection.addSeries(yAxis);
 
+        if(!ZeroPosition.checkDifferentValuesSign(function, leftCompartment, rightCompartment)) {
+            xAxis.add(0,0);
+            XYSeries yAxis = new XYSeries("Y-axis");
+            yAxis.add(0, minValue);
+            yAxis.add(0, maxValue);
+            yAxis.add(0,0);
+            seriesCollection.addSeries(yAxis);
+        }
         JFreeChart chart = ChartFactory.createXYLineChart(
                 "f(x) = " + chartName, "X", "Y", seriesCollection,
                 PlotOrientation.VERTICAL, true, true, false
