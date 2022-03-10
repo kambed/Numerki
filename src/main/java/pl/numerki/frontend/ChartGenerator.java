@@ -17,7 +17,7 @@ public class ChartGenerator {
             Function<Double, Double> function, double leftCompartment, double rightCompartment,
             double bisectionZeroPosition, double secantZeroPosition
     ) {
-        XYSeries functionSeries = new XYSeries("Function");
+        XYSeries functionSeries = new XYSeries("Funkcja");
         double unit = (rightCompartment - leftCompartment) / 1000;
         double minValue = function.apply(leftCompartment);
         double maxValue = function.apply(leftCompartment);
@@ -32,11 +32,13 @@ public class ChartGenerator {
             }
         }
 
-        XYSeries zeroPositionSeries = new XYSeries("Zero positions");
-        zeroPositionSeries.add(bisectionZeroPosition, function.apply(bisectionZeroPosition));
-        zeroPositionSeries.add(secantZeroPosition, function.apply(secantZeroPosition));
+        XYSeries zeroPositionSeries = new XYSeries("Miejsca zerowe");
+        if (!Double.isNaN(bisectionZeroPosition))
+            zeroPositionSeries.add(bisectionZeroPosition, function.apply(bisectionZeroPosition));
+        if (!Double.isNaN(secantZeroPosition))
+            zeroPositionSeries.add(secantZeroPosition, function.apply(secantZeroPosition));
 
-        XYSeries xAxis = new XYSeries("X-axis");
+        XYSeries xAxis = new XYSeries("oś X");
         xAxis.add(leftCompartment,0);
         xAxis.add(rightCompartment,0);
 
@@ -47,7 +49,7 @@ public class ChartGenerator {
 
         if(!ZeroPosition.checkDifferentValuesSign(function, leftCompartment, rightCompartment)) {
             xAxis.add(0,0);
-            XYSeries yAxis = new XYSeries("Y-axis");
+            XYSeries yAxis = new XYSeries("oś Y");
             yAxis.add(0, minValue);
             yAxis.add(0, maxValue);
             yAxis.add(0,0);
