@@ -15,7 +15,7 @@ import java.util.function.Function;
 public class ChartGenerator {
     public static JFreeChart generatePlot(
             Function<Double, Double> function, double leftCompartment, double rightCompartment,
-            double bisectionZeroPosition, double secantZeroPosition, String chartName
+            double bisectionZeroPosition, double secantZeroPosition
     ) {
         XYSeries functionSeries = new XYSeries("Function");
         double unit = (rightCompartment - leftCompartment) / 1000;
@@ -54,7 +54,7 @@ public class ChartGenerator {
             seriesCollection.addSeries(yAxis);
         }
         JFreeChart chart = ChartFactory.createXYLineChart(
-                "f(x) = " + chartName, "X", "Y", seriesCollection,
+                "Wykres funckji", "X", "Y", seriesCollection,
                 PlotOrientation.VERTICAL, true, true, false
         );
         XYPlot plot = (XYPlot) chart.getPlot();

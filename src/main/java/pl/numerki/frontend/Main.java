@@ -18,27 +18,16 @@ public class Main {
         int numOfAssemblies = s.nextInt();
 
         Function<Double, Double>[] function = new Function[numOfAssemblies];
-        String functionString = "";
         for (int j = 0; j < numOfAssemblies; j++) {
             System.out.println(getMenu());
             System.out.print("Wybór: ");
             int choose = s.nextInt();
             switch (choose) {
-                case 1 -> {
-                    function[j] = Functions.sinFunction();
-
-                    if (!functionString.isEmpty())
-                        functionString = "sin(x)".replace("x", functionString);
-                    else functionString = "sin(x)";
-                }
+                case 1 -> function[j] = Functions.sinFunction();
                 case 2 -> {
                     System.out.print("Podaj a: ");
                     double a = s.nextDouble();
                     function[j] = Functions.exponentialFunction(a);
-
-                    if (!functionString.isEmpty())
-                        functionString = (a + "^x").replace("x", "(" + functionString + ")");
-                    else functionString = a + "^x";
                 }
                 case 3 -> {
                     System.out.print("Podaj a: ");
@@ -48,9 +37,6 @@ public class Main {
                     System.out.print("Podaj c: ");
                     double c = s.nextDouble();
                     function[j] = Functions.squareFunction(a, b, c);
-                    if (!functionString.isEmpty())
-                        functionString = (a + "x^2+" + b + "x+" + c).replace("x", "(" + functionString + ")");
-                    else functionString = a + "x^2+" + b + "x+" + c;
                 }
                 default -> {
                     System.out.println("Wybrano nie prawidlową opcję.");
@@ -108,8 +94,7 @@ public class Main {
                     ChartGenerator.generatePlot(
                             assembledFunction,
                             leftCompartment, rightCompartment,
-                            bisectionResult, secantResult,
-                            functionString
+                            bisectionResult, secantResult
                     ),
                     600, 600
             );
