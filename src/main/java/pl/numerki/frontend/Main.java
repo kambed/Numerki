@@ -71,7 +71,7 @@ public class Main {
             return;
         }
 
-        System.out.println("Wybierz warunek zakonczenia: \n" + getEnding());
+        System.out.println("Wybierz warunek zakończenia: \n" + getEnding());
         System.out.print("Wybór: ");
         int choose = s.nextInt();
         double bisectionResult, secantResult;
