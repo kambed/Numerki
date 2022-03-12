@@ -15,11 +15,12 @@ public class SecantMethod extends ZeroPosition {
     ) {
         double leftValue = function.apply(leftEndOfCompartment);
         double rightValue = function.apply(rightEndOfCompartment);
-        int i = 0;
-        while (
-                abs(rightEndOfCompartment - leftEndOfCompartment) > epsilon
-                        && i < iterations
-                        && leftEndOfCompartment != rightEndOfCompartment
+        for (
+            int i = 0;
+            abs(rightEndOfCompartment - leftEndOfCompartment) > epsilon
+                && i < iterations
+                && leftEndOfCompartment != rightEndOfCompartment;
+            i++
         ) {
             double secantWithOXCrossPoint = getSecantWithOXCrossPoint(leftValue, rightEndOfCompartment,
                     rightValue, leftEndOfCompartment);
@@ -31,7 +32,6 @@ public class SecantMethod extends ZeroPosition {
             leftValue = rightValue;
             rightEndOfCompartment = secantWithOXCrossPoint;
             rightValue = valueInCrossPoint;
-            i++;
         }
         return getSecantWithOXCrossPoint(leftValue, rightEndOfCompartment, rightValue, leftEndOfCompartment);
     }

@@ -12,11 +12,12 @@ public class Bisection extends ZeroPosition{
             double epsilon,
             int iterations
     ) {
-        int i = 0;
-        while (
-                abs(rightEndOfCompartment - leftEndOfCompartment) > epsilon
-                        && i < iterations
-                        && leftEndOfCompartment != rightEndOfCompartment
+        for (
+            int i = 0;
+            abs(rightEndOfCompartment - leftEndOfCompartment) > epsilon
+                && i < iterations
+                && leftEndOfCompartment != rightEndOfCompartment;
+            i++
         ) {
             double compartmentMiddle = (leftEndOfCompartment + rightEndOfCompartment) / 2;
 
@@ -29,7 +30,6 @@ public class Bisection extends ZeroPosition{
             } else {
                 leftEndOfCompartment = compartmentMiddle;
             }
-            i++;
         }
         return (leftEndOfCompartment + rightEndOfCompartment) / 2;
     }
