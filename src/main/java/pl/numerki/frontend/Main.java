@@ -39,7 +39,7 @@ public class Main {
                     function[j] = Functions.squareFunction(a, b, c);
                 }
                 default -> {
-                    System.out.println("Wybrano nie prawidlową opcję.");
+                    System.out.println("Wybrano nie prawidłową opcję.");
                     return;
                 }
             }
@@ -53,7 +53,7 @@ public class Main {
         double rightCompartment = s.nextDouble();
 
         if (!ZeroPosition.checkDifferentValuesSign(assembledFunction, leftCompartment, rightCompartment)) {
-            System.out.println("Wartości funckcji w predziałach końcowych muszą mieć różne znaki.");
+            System.out.println("Wartości funkcji w przedziałach końcowych muszą mieć różne znaki.");
             return;
         }
 
@@ -61,29 +61,31 @@ public class Main {
         System.out.print("Wybór: ");
         int choose = s.nextInt();
         double bisectionResult, secantResult;
+        int iterations = Integer.MAX_VALUE;
+        double epsilon = -1;
         switch (choose) {
             case 1 -> {
                 System.out.print("Podaj liczbę iteracji: ");
-                int iterations = s.nextInt();
-                bisectionResult = Bisection.getZeroPositionsWithIterationCondition(
-                        assembledFunction, leftCompartment, rightCompartment, iterations);
-                secantResult = SecantMethod.getZeroPositionsWithIterationCondition(
-                        assembledFunction, leftCompartment, rightCompartment, iterations);
+                iterations = s.nextInt();
+                bisectionResult = Bisection.getZeroPosition(
+                        assembledFunction, leftCompartment, rightCompartment, epsilon, iterations);
+                secantResult = SecantMethod.getZeroPosition(
+                        assembledFunction, leftCompartment, rightCompartment, epsilon, iterations);
                 System.out.println("Bisekcja: " + bisectionResult);
                 System.out.println("Metoda siecznych: " + secantResult);
             }
             case 2 -> {
-                System.out.print("Podaj dokladnosc: ");
-                double epsilon = s.nextDouble();
-                bisectionResult = Bisection.getZeroPositionsWithPrecisionCondition(
-                        assembledFunction, leftCompartment, rightCompartment, epsilon);
-                secantResult = SecantMethod.getZeroPositionsWithPrecisionCondition(
-                        assembledFunction, leftCompartment, rightCompartment, epsilon);
+                System.out.print("Podaj dokładność: ");
+                epsilon = s.nextDouble();
+                bisectionResult = Bisection.getZeroPosition(
+                        assembledFunction, leftCompartment, rightCompartment, epsilon, iterations);
+                secantResult = SecantMethod.getZeroPosition(
+                        assembledFunction, leftCompartment, rightCompartment, epsilon, iterations);
                 System.out.println("Bisekcja: " + bisectionResult);
                 System.out.println("Metoda siecznych: " + secantResult);
             }
             default -> {
-                System.out.println("Wybrano nie prawidlową opcję.");
+                System.out.println("Wybrano nie prawidłową opcję.");
                 return;
             }
         }
@@ -115,7 +117,7 @@ public class Main {
         return """
                 Funckje:\s
                 1 - ilosc iteracji\s
-                2 - dokladnosc""";
+                2 - dokładność""";
     }
 
     private static Function<Double, Double> assemble(Function<Double, Double>[] array) {

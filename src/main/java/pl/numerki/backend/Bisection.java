@@ -5,15 +5,19 @@ import java.util.function.Function;
 import static java.lang.Math.abs;
 
 public class Bisection extends ZeroPosition{
-    public static double getZeroPositionsWithPrecisionCondition(
+    public static double getZeroPosition(
             Function<Double, Double> function,
             double leftEndOfCompartment,
             double rightEndOfCompartment,
-            double epsilon
+            double epsilon,
+            int iterations
     ) {
-        while (
-                abs(rightEndOfCompartment - leftEndOfCompartment) > epsilon
-                        && leftEndOfCompartment != rightEndOfCompartment
+        for (
+            int i = 0;
+            abs(rightEndOfCompartment - leftEndOfCompartment) > epsilon
+                && i < iterations
+                && leftEndOfCompartment != rightEndOfCompartment;
+            i++
         ) {
             double compartmentMiddle = (leftEndOfCompartment + rightEndOfCompartment) / 2;
 
@@ -30,25 +34,4 @@ public class Bisection extends ZeroPosition{
         return (leftEndOfCompartment + rightEndOfCompartment) / 2;
     }
 
-    public static double getZeroPositionsWithIterationCondition(
-            Function<Double, Double> function,
-            double leftEndOfCompartment,
-            double rightEndOfCompartment,
-            int numberOfIterations
-    ) {
-        for (int i = 0; i < numberOfIterations; i++) {
-            double compartmentMiddle = (leftEndOfCompartment + rightEndOfCompartment) / 2;
-
-            if (function.apply(compartmentMiddle) == 0) {
-                return compartmentMiddle;
-            }
-
-            if (checkDifferentValuesSign(function, leftEndOfCompartment, compartmentMiddle)) {
-                rightEndOfCompartment = compartmentMiddle;
-            } else {
-                leftEndOfCompartment = compartmentMiddle;
-            }
-        }
-        return (leftEndOfCompartment + rightEndOfCompartment) / 2;
-    }
 }
