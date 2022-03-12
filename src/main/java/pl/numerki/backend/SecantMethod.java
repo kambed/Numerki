@@ -20,6 +20,14 @@ public class SecantMethod extends ZeroPosition {
         ) {
             double secantWithOXCrossPoint = getSecantWithOXCrossPoint(leftValue, rightEndOfCompartment,
                     rightValue, leftEndOfCompartment);
+            if(
+                    !(
+                            (secantWithOXCrossPoint>=leftEndOfCompartment && secantWithOXCrossPoint<=rightEndOfCompartment)
+                            || (secantWithOXCrossPoint<=leftEndOfCompartment && secantWithOXCrossPoint>=rightEndOfCompartment)
+                    )
+            ) {
+                return Double.NaN;
+            }
             double valueInCrossPoint = function.apply(secantWithOXCrossPoint);
             if (valueInCrossPoint == 0) {
                 return secantWithOXCrossPoint;

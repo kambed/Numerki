@@ -1,75 +1,105 @@
 package pl.numerki.frontend;
 
+import org.jfree.chart.ChartUtilities;
 import pl.numerki.backend.Bisection;
 import pl.numerki.backend.Functions;
 import pl.numerki.backend.SecantMethod;
 import pl.numerki.backend.ZeroPosition;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Scanner;
 import java.util.function.Function;
 
 public class Main {
-    public static void main(String[] args) {
-        System.out.println("Podaj liczbe zlozen");
+    public static void main(String[] args) throws Exception {
+        System.out.print("Podaj liczbę złożeń: ");
         Scanner s = new Scanner(System.in);
         int numOfAssemblies = s.nextInt();
 
         Function<Double, Double>[] function = new Function[numOfAssemblies];
         for (int j = 0; j < numOfAssemblies; j++) {
             System.out.println(getMenu());
+            System.out.print("Wybór: ");
             int choose = s.nextInt();
             switch (choose) {
                 case 1 -> function[j] = Functions.sinFunction();
                 case 2 -> {
-                    System.out.println("Podaj a");
+                    System.out.print("Podaj a: ");
                     double a = s.nextDouble();
                     function[j] = Functions.exponentialFunction(a);
                 }
                 case 3 -> {
-                    System.out.println("Podaj a");
+                    System.out.print("Podaj a: ");
                     double a = s.nextDouble();
-                    System.out.println("Podaj b");
+                    System.out.print("Podaj b: ");
                     double b = s.nextDouble();
-                    System.out.println("Podaj c");
+                    System.out.print("Podaj c: ");
                     double c = s.nextDouble();
                     function[j] = Functions.squareFunction(a, b, c);
                 }
                 default -> {
-                    System.out.println("Wybrano nie prawidlowa opcje");
+                    System.out.println("Wybrano nie prawidlową opcję.");
                     return;
                 }
             }
         }
         Function<Double, Double> assembledFunction = assemble(function);
 
-        System.out.println("Podaj przedzial testowy");
+        System.out.println("Podaj przedział testowy");
+        System.out.print("Początek: ");
         double leftCompartment = s.nextDouble();
+        System.out.print("Koniec: ");
         double rightCompartment = s.nextDouble();
 
         if (!ZeroPosition.checkDifferentValuesSign(assembledFunction, leftCompartment, rightCompartment)) {
-            System.out.println("Wartości funckcji w predziałach końcowych muszą mieć różne znaki");
+            System.out.println("Wartości funckcji w predziałach końcowych muszą mieć różne znaki.");
             return;
         }
 
-        System.out.println("Wybierz warunek zakonczenia \n" + getEnding());
+        System.out.println("Wybierz warunek zakończenia: \n" + getEnding());
+        System.out.print("Wybór: ");
         int choose = s.nextInt();
+        double bisectionResult, secantResult;
         switch (choose) {
             case 1 -> {
-                System.out.println("Podaj liczbe iteracji");
+                System.out.print("Podaj liczbę iteracji: ");
                 int iterations = s.nextInt();
-                System.out.println("Bisekcja: " + Bisection.getZeroPositionsWithIterationCondition(
-                        assembledFunction, leftCompartment, rightCompartment, iterations));
-                System.out.println("Metoda siecznych: " + SecantMethod.getZeroPositionsWithIterationCondition(
-                        assembledFunction, leftCompartment, rightCompartment, iterations));
+                bisectionResult = Bisection.getZeroPositionsWithIterationCondition(
+                        assembledFunction, leftCompartment, rightCompartment, iterations);
+                secantResult = SecantMethod.getZeroPositionsWithIterationCondition(
+                        assembledFunction, leftCompartment, rightCompartment, iterations);
+                System.out.println("Bisekcja: " + bisectionResult);
+                System.out.println("Metoda siecznych: " + secantResult);
             }
             case 2 -> {
-                System.out.println("Podaj dokladnosc");
+                System.out.print("Podaj dokladnosc: ");
                 double epsilon = s.nextDouble();
-                System.out.println("Bisekcja: " + Bisection.getZeroPositionsWithPrecisionCondition(
-                        assembledFunction, leftCompartment, rightCompartment, epsilon));
-                System.out.println("Metoda siecznych: " + SecantMethod.getZeroPositionsWithPrecisionCondition(
-                        assembledFunction, leftCompartment, rightCompartment, epsilon));
+                bisectionResult = Bisection.getZeroPositionsWithPrecisionCondition(
+                        assembledFunction, leftCompartment, rightCompartment, epsilon);
+                secantResult = SecantMethod.getZeroPositionsWithPrecisionCondition(
+                        assembledFunction, leftCompartment, rightCompartment, epsilon);
+                System.out.println("Bisekcja: " + bisectionResult);
+                System.out.println("Metoda siecznych: " + secantResult);
             }
+            default -> {
+                System.out.println("Wybrano nie prawidlową opcję.");
+                return;
+            }
+        }
+
+        try {
+            ChartUtilities.saveChartAsPNG(
+                    new File("chart.png"),
+                    ChartGenerator.generatePlot(
+                            assembledFunction,
+                            leftCompartment, rightCompartment,
+                            bisectionResult, secantResult
+                    ),
+                    600, 600
+            );
+        } catch (IOException e) {
+            System.out.println("Wystapił problem przy generowaniu wykresu.");
         }
     }
 

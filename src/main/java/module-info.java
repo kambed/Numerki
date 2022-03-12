@@ -1,6 +1,5 @@
 module pl.numerki.numerki {
-    requires javafx.controls;
-    requires javafx.fxml;
-    opens pl.numerki.frontend to javafx.fxml;
+    requires jfreechart;
+    requires java.desktop;
     exports pl.numerki.frontend;
 }
