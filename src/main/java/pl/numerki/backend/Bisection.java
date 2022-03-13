@@ -30,7 +30,7 @@ public class Bisection extends ZeroPosition{
                 if (checkDifferentValuesSign(function, leftEndOfCompartment, compartmentMiddle)) {
                     diff = abs(leftEndOfCompartment-compartmentMiddle);
                 } else {
-                    diff = abs(rightEndOfCompartment-leftEndOfCompartment);
+                    diff = abs(rightEndOfCompartment-compartmentMiddle);
                 }
                 return compartmentMiddle;
             }
