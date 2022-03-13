@@ -67,28 +67,26 @@ public class Main {
             case 1 -> {
                 System.out.print("Podaj liczbę iteracji: ");
                 iterations = s.nextInt();
-                bisectionResult = Bisection.getZeroPosition(
-                        assembledFunction, leftCompartment, rightCompartment, epsilon, iterations);
-                secantResult = SecantMethod.getZeroPosition(
-                        assembledFunction, leftCompartment, rightCompartment, epsilon, iterations);
-                System.out.println("Bisekcja: " + bisectionResult);
-                System.out.println("Metoda siecznych: " + secantResult);
             }
             case 2 -> {
                 System.out.print("Podaj dokładność: ");
                 epsilon = s.nextDouble();
-                bisectionResult = Bisection.getZeroPosition(
-                        assembledFunction, leftCompartment, rightCompartment, epsilon, iterations);
-                secantResult = SecantMethod.getZeroPosition(
-                        assembledFunction, leftCompartment, rightCompartment, epsilon, iterations);
-                System.out.println("Bisekcja: " + bisectionResult);
-                System.out.println("Metoda siecznych: " + secantResult);
             }
             default -> {
                 System.out.println("Wybrano nie prawidłową opcję.");
                 return;
             }
         }
+        bisectionResult = Bisection.getZeroPosition(
+                assembledFunction, leftCompartment, rightCompartment, epsilon, iterations);
+        secantResult = SecantMethod.getZeroPosition(
+                assembledFunction, leftCompartment, rightCompartment, epsilon, iterations);
+        System.out.println("Bisekcja: " + bisectionResult);
+        System.out.println("Bisekcja iteracje: " + Bisection.getIteration());
+        System.out.println("Bisekcja epsilon: " + Bisection.getDiff());
+        System.out.println("Metoda siecznych: " + secantResult);
+        System.out.println("Metoda siecznych iteracje: " + SecantMethod.getIteration());
+        System.out.println("Metoda siecznych epsilon: " + SecantMethod.getDiff());
 
         try {
             ChartUtilities.saveChartAsPNG(
