@@ -36,7 +36,6 @@ public class SecantMethod extends ZeroPosition {
             leftEndOfCompartment = rightEndOfCompartment;
             leftValue = rightValue;
             rightEndOfCompartment = secantWithOXCrossPoint;
-            System.out.println(rightEndOfCompartment);
             rightValue = valueInCrossPoint;
             iteration = i;
             diff = abs(leftEndOfCompartment-rightEndOfCompartment);

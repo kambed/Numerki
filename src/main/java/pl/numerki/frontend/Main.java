@@ -30,13 +30,18 @@ public class Main {
                     function[j] = Functions.exponentialFunction(a);
                 }
                 case 3 -> {
-                    System.out.print("Podaj a: ");
-                    double a = s.nextDouble();
-                    System.out.print("Podaj b: ");
-                    double b = s.nextDouble();
-                    System.out.print("Podaj c: ");
-                    double c = s.nextDouble();
-                    function[j] = Functions.squareFunction(a, b, c);
+                    System.out.print("Podaj stopień wielomianu, który chcesz wprowadzić: ");
+                    int grade = s.nextInt();
+                    if (grade < 0) {
+                        System.out.println("Wybrano nieprawidłowy stopień wielomianu.");
+                        return;
+                    }
+                    double[] factors = new double[grade + 1];
+                    for (int i = 0; i < grade + 1; i++) {
+                        System.out.print("Podaj współczynnik przy " + i + " potędze wielomianu: ");
+                        factors[i] = s.nextDouble();
+                    }
+                    function[j] = Functions.polynomial(factors);
                 }
                 default -> {
                     System.out.println("Wybrano nie prawidłową opcję.");
@@ -108,7 +113,7 @@ public class Main {
                 Funckje:\s
                 1 - sin(x)\s
                 2 - a^x\s
-                3 - ax^2+bx+c""";
+                3 - wielomian (a + bx + cx^2 + ...)""";
     }
 
     private static String getEnding() {
