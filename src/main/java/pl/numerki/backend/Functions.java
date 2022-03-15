@@ -5,11 +5,10 @@ import java.util.function.Function;
 public class Functions {
     public static Function<Double, Double> polynomial(double[] factors) {
         return aDouble -> {
-            double result = 0;
-            double powerOfX = 1;
-            for (double factor : factors) {
-                result += (factor * powerOfX);
-                powerOfX *= aDouble;
+            double result = factors[factors.length-1];
+            for (int i = factors.length - 2; i >= 0; i--) {
+                result *= aDouble;
+                result += factors[i];
             }
             return result;
         };
