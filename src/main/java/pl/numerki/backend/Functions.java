@@ -27,7 +27,6 @@ public class Functions {
                 }
                 return result;
             } else {
-                System.out.println(Math.pow(a, aDouble));
                 return Math.pow(a, aDouble);
             }
         };
