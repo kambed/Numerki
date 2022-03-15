@@ -27,6 +27,10 @@ public class Main {
                 case 2 -> {
                     System.out.print("Podaj a: ");
                     double a = s.nextDouble();
+                    if (a < 0) {
+                        System.out.println("Podstawa funkcji wykładniczej musi być liczbą dodatnią.");
+                        return;
+                    }
                     function[j] = Functions.exponentialFunction(a);
                 }
                 case 3 -> {
