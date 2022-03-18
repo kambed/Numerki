@@ -7,8 +7,20 @@ public class JordanElimination {
             for (int j = 0; j < numOfEquations; j++) {
                 if (i != j) {
                     double ratio = equation[j][i] / equation[i][i];
+                    boolean row0 = true;
                     for (int k = 0; k < numOfEquations + 1; k++) {
                         equation[j][k] -= ratio * equation[i][k];
+                        if (equation[j][k] != 0 && row0 && k != numOfEquations) {
+                            row0 = false;
+                        }
+                    }
+                    if (row0) {
+                        if (equation[j][numOfEquations] == 0) {
+                            System.out.println("Nieoznaczony");
+                        } else {
+                            System.out.println("Sprzeczny");
+                        }
+                        return null;
                     }
                 }
             }
