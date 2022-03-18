@@ -15,15 +15,11 @@ public class FileOperator {
         if (Files.exists(p)) {
             List<String> lines = Files.readAllLines(p);
             int[][] board = new int[lines.size()][lines.size() + 1];
-            int i = 0;
-            int j = 0;
-            for (String s : lines) {
-                for (String arg : s.split("\\s+")) {
-                    board[i][j] = Integer.parseInt(arg);
-                    j++;
+            for (int i = 0; i < lines.size(); i++) {
+                String[] rowValues = lines.get(i).split("\\s+");
+                for (int j = 0; j < lines.size() + 1; j++) {
+                    board[i][j] = Integer.parseInt(rowValues[j]);
                 }
-                j = 0;
-                i++;
             }
             return board;
         }
