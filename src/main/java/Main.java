@@ -11,12 +11,13 @@ public class Main {
         String pathString = scanner.next();
         Path board = Paths.get("src/main/resources/" + pathString);
         System.out.println(board.toAbsolutePath());
-        int[][] equation = new int[0][0];
+        double[][] equation = new double[0][0];
         try {
              equation = FileOperator.readBoard(board);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println(Arrays.toString(equation[0]));
+        double[] solution = JordanElimination.solve(equation);
+        System.out.println(Arrays.toString(solution));
     }
 }
