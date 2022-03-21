@@ -11,19 +11,15 @@ public class FileOperator {
     private static int rows;
     private static int columns;
 
-    public static double[][] readBoard(Path p) throws IOException {
+    public static int[][] readBoard(Path p) throws IOException {
         if (Files.exists(p)) {
             List<String> lines = Files.readAllLines(p);
-            double[][] board = new double[lines.size()][lines.size() + 1];
-            int i = 0;
-            int j = 0;
-            for (String s : lines) {
-                for (String arg : s.split("\\s+")) {
-                    board[i][j] = Double.parseDouble(arg);
-                    j++;
+            int[][] board = new int[lines.size()][lines.size() + 1];
+            for (int i = 0; i < lines.size(); i++) {
+                String[] rowValues = lines.get(i).split("\\s+");
+                for (int j = 0; j < lines.size() + 1; j++) {
+                    board[i][j] = Integer.parseInt(rowValues[j]);
                 }
-                j = 0;
-                i++;
             }
             return board;
         }
