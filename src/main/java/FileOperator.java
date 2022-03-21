@@ -11,10 +11,10 @@ public class FileOperator {
     private static int rows;
     private static int columns;
 
-    public static int[][] readBoard(Path p) throws IOException {
+    public static double[][] readBoard(Path p) throws IOException {
         if (Files.exists(p)) {
             List<String> lines = Files.readAllLines(p);
-            int[][] board = new int[lines.size()][lines.size() + 1];
+            double[][] board = new double[lines.size()][lines.size() + 1];
             for (int i = 0; i < lines.size(); i++) {
                 String[] rowValues = lines.get(i).split("\\s+");
                 for (int j = 0; j < lines.size() + 1; j++) {
