@@ -1,7 +1,7 @@
 import java.util.Arrays;
 
 public class JordanElimination {
-    public static double[] solve(double[][] equation) {
+    public static double[] solve(double[][] equation) throws IndefiniteException, ConflictException {
         int numOfEquations = equation[0].length - 1;
         for (int i = 0; i < numOfEquations; i++) {
             for (int j = 0; j < numOfEquations; j++) {
@@ -16,11 +16,10 @@ public class JordanElimination {
                     }
                     if (row0) {
                         if (equation[j][numOfEquations] == 0) {
-                            System.out.println("Nieoznaczony");
+                            throw new IndefiniteException("Układ nieoznaczony!");
                         } else {
-                            System.out.println("Sprzeczny");
+                            throw new ConflictException("Układ sprzeczny!");
                         }
-                        return null;
                     }
                 }
             }

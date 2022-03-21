@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ConflictException, IndefiniteException {
         System.out.print("Podaj plik: ");
         Scanner scanner = new Scanner(System.in);
         String pathString = scanner.next();
