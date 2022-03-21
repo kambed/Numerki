@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) throws ConflictException, IndefiniteException {
+    public static void main(String[] args) {
         System.out.print("Podaj plik: ");
         Scanner scanner = new Scanner(System.in);
         String pathString = scanner.next();
@@ -17,7 +17,13 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        double[] solution = JordanElimination.solve(equation);
-        System.out.println(Arrays.toString(solution));
+        try {
+            double[] solution = JordanElimination.solve(equation);
+            System.out.println(Arrays.toString(solution));
+        } catch (IndefiniteException ie) {
+            System.out.println("Nieoznaczony");
+        } catch (ConflictException ce) {
+            System.out.println("Sprzeczny");
+        }
     }
 }
