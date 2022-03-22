@@ -18,7 +18,7 @@ public class FileOperator {
             for (int i = 0; i < lines.size(); i++) {
                 String[] rowValues = lines.get(i).split("\\s+");
                 for (int j = 0; j < lines.size() + 1; j++) {
-                    board[i][j] = Integer.parseInt(rowValues[j]);
+                    board[i][j] = Double.parseDouble(rowValues[j]);
                 }
             }
             return board;
