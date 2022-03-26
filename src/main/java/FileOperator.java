@@ -1,15 +1,9 @@
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class FileOperator {
-    private static int rows;
-    private static int columns;
 
     public static double[][] readBoard(Path p) throws IOException {
         if (Files.exists(p)) {
@@ -24,13 +18,5 @@ public class FileOperator {
             return board;
         }
         return null;
-    }
-
-    public static int getRows() {
-        return rows;
-    }
-
-    public static int getColumns() {
-        return columns;
     }
 }

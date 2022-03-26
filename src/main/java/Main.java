@@ -9,7 +9,7 @@ public class Main {
         System.out.print("Podaj plik: ");
         Scanner scanner = new Scanner(System.in);
         String pathString = scanner.next();
-        Path board = Paths.get("src/main/resources/" + pathString);
+        Path board = Paths.get(pathString);
         double[][] equation = new double[0][0];
         try {
              equation = FileOperator.readBoard(board);

@@ -1,9 +1,10 @@
-import java.util.Arrays;
-
 public class JordanElimination {
+    private static final double PRECISION = 0.0001;
+
     public static double[] solve(double[][] equation) throws IndefiniteException, ConflictException {
         int numOfEquations = equation[0].length - 1;
         for (int i = 0; i < numOfEquations; i++) {
+            // Replace rows if 0 is found on the diagonal
             if (equation[i][i] == 0) {
                 for (int j = i; j < numOfEquations; j++) {
                     if (equation[j][i] != 0) {
@@ -15,18 +16,20 @@ public class JordanElimination {
                     }
                 }
             }
+            // Zeroing the column
             for (int j = 0; j < numOfEquations; j++) {
                 if (i != j) {
                     double ratio = equation[j][i] / equation[i][i];
                     boolean row0 = true;
                     for (int k = 0; k < numOfEquations + 1; k++) {
                         equation[j][k] -= ratio * equation[i][k];
-                        if ((equation[j][k] > 0.0001 || equation[j][k] < -0.0001) && row0 && k != numOfEquations) {
+                        if (row0 && k != numOfEquations && Math.abs(equation[j][k]) > PRECISION) {
                             row0 = false;
                         }
                     }
+
                     if (row0) {
-                        if (equation[j][numOfEquations] < 0.0001 && equation[j][numOfEquations] > -0.0001) {
+                        if (Math.abs(equation[j][numOfEquations]) < PRECISION) {
                             throw new IndefiniteException("Układ nieoznaczony!");
                         } else {
                             throw new ConflictException("Układ sprzeczny!");
@@ -35,12 +38,11 @@ public class JordanElimination {
                 }
             }
         }
+
+        double[] result = new double[numOfEquations];
         for (int i = 0; i < numOfEquations; i++) {
-            double ratio = 1.0 / equation[i][i];
-            for (int j = 0; j < numOfEquations + 1; j++) {
-                equation[i][j] *= ratio;
-            }
+            result[i] = equation[i][numOfEquations] / equation[i][i];
         }
-        return Arrays.stream(equation).mapToDouble(doubles -> doubles[numOfEquations]).toArray();
+        return result;
     }
 }
