@@ -10,7 +10,6 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         String pathString = scanner.next();
         Path board = Paths.get("src/main/resources/" + pathString);
-        System.out.println(board.toAbsolutePath());
         double[][] equation = new double[0][0];
         try {
              equation = FileOperator.readBoard(board);
@@ -20,10 +19,8 @@ public class Main {
         try {
             double[] solution = JordanElimination.solve(equation);
             System.out.println(Arrays.toString(solution));
-        } catch (IndefiniteException ie) {
-            System.out.println("Nieoznaczony");
-        } catch (ConflictException ce) {
-            System.out.println("Sprzeczny");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 }
