@@ -1,5 +1,3 @@
-import java.util.Arrays;
-
 import static java.lang.Math.abs;
 
 public class JordanElimination {
@@ -18,11 +16,9 @@ public class JordanElimination {
                         maxIndex = j;
                     }
                 }
-                for (int k = 0; k < numOfEquations + 1; k++) {
-                    double temp = equation[maxIndex][k];
-                    equation[maxIndex][k] = equation[i][k];
-                    equation[i][k] = temp;
-                }
+                double[] temp = equation[maxIndex];
+                equation[maxIndex] = equation[i];
+                equation[i] = temp;
             }
             // Zeroing the column
             for (int j = 0; j < numOfEquations; j++) {
