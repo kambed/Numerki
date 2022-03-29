@@ -1,3 +1,5 @@
+import static java.lang.Math.abs;
+
 public class JordanElimination {
     private static final double PRECISION = 0.0001;
 
@@ -6,15 +8,17 @@ public class JordanElimination {
         for (int i = 0; i < numOfEquations; i++) {
             // Replace rows if 0 is found on the diagonal
             if (equation[i][i] == 0) {
-                for (int j = i; j < numOfEquations; j++) {
-                    if (equation[j][i] != 0) {
-                        for (int k = 0; k < numOfEquations + 1; k++) {
-                            double temp = equation[j][k];
-                            equation[j][k] = equation[i][k];
-                            equation[i][k] = temp;
-                        }
+                double maxValue = 0;
+                int maxIndex = 0;
+                for (int j = 0; j < numOfEquations; j++) {
+                    if (maxValue < abs(equation[j][i])) {
+                        maxValue = abs(equation[j][i]);
+                        maxIndex = j;
                     }
                 }
+                double[] temp = equation[maxIndex];
+                equation[maxIndex] = equation[i];
+                equation[i] = temp;
             }
             // Zeroing the column
             for (int j = 0; j < numOfEquations; j++) {
@@ -23,13 +27,12 @@ public class JordanElimination {
                     boolean row0 = true;
                     for (int k = 0; k < numOfEquations + 1; k++) {
                         equation[j][k] -= ratio * equation[i][k];
-                        if (row0 && k != numOfEquations && Math.abs(equation[j][k]) > PRECISION) {
+                        if (row0 && k != numOfEquations && abs(equation[j][k]) > PRECISION) {
                             row0 = false;
                         }
                     }
-
                     if (row0) {
-                        if (Math.abs(equation[j][numOfEquations]) < PRECISION) {
+                        if (abs(equation[j][numOfEquations]) < PRECISION) {
                             throw new IndefiniteException("Układ nieoznaczony!");
                         } else {
                             throw new ConflictException("Układ sprzeczny!");
