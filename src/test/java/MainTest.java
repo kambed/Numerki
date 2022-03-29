@@ -99,6 +99,13 @@ class MainTest {
         assertEquals(1, solution[2], 0.001);
     }
 
+    @Test
+    @DisplayName("Equation 11")
+    void equation11() {
+        double[][] equation = getEquation(11);
+        assertThrows(IndefiniteException.class, () -> JordanElimination.solve(equation));
+    }
+
     private double[][] getEquation(int i) {
         Path board = Paths.get("src/test/resources/equation" + i + ".txt");
         double[][] equation = new double[0][0];
