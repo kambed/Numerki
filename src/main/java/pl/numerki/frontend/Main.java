@@ -3,6 +3,7 @@ package pl.numerki.frontend;
 import org.jfree.chart.ChartUtilities;
 import pl.numerki.backend.FileOperator;
 import pl.numerki.backend.Functions;
+import pl.numerki.backend.LagrangeInterpolation;
 
 import java.io.File;
 import java.io.IOException;
@@ -74,13 +75,18 @@ public class Main {
             e.printStackTrace();
         }
 
+        double[] nodesY = new double[nodes.length];
+        for (int i = 0; i < nodes.length; i++) {
+            nodesY[i] = assembledFunction.apply(nodes[i]);
+        }
+        Function<Double, Double> interpolatedFunction = LagrangeInterpolation.interpolate(nodes, nodesY);
 
         try {
             ChartUtilities.saveChartAsPNG(
                     new File("chart.png"),
                     ChartGenerator.generatePlot(
                             assembledFunction,
-                            assembledFunction,
+                            interpolatedFunction,
                             leftCompartment,
                             rightCompartment,
                             nodes
