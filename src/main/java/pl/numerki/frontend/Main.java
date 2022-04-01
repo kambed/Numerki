@@ -1,18 +1,19 @@
 package pl.numerki.frontend;
 
 import org.jfree.chart.ChartUtilities;
-import pl.numerki.backend.Bisection;
+import pl.numerki.backend.FileOperator;
 import pl.numerki.backend.Functions;
-import pl.numerki.backend.SecantMethod;
-import pl.numerki.backend.ZeroPosition;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.function.Function;
 
 public class Main {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         System.out.print("Podaj liczbę złożeń: ");
         Scanner s = new Scanner(System.in);
         int numOfAssemblies = s.nextInt();
@@ -47,6 +48,7 @@ public class Main {
                     }
                     function[j] = Functions.polynomial(factors);
                 }
+                case 4 -> function[j] = Functions.absoluteFunction();
                 default -> {
                     System.out.println("Wybrano nie prawidłową opcję.");
                     return;
@@ -61,49 +63,27 @@ public class Main {
         System.out.print("Koniec: ");
         double rightCompartment = s.nextDouble();
 
-        if (!ZeroPosition.checkDifferentValuesSign(assembledFunction, leftCompartment, rightCompartment)) {
-            System.out.println("Wartości funkcji w przedziałach końcowych muszą mieć różne znaki.");
-            return;
+        System.out.print("Podaj plik: ");
+        Scanner scanner = new Scanner(System.in);
+        String pathString = scanner.next();
+        Path board = Paths.get(pathString);
+        double[] nodes = new double[0];
+        try {
+            nodes = FileOperator.readNodes(board);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        System.out.println("Wybierz warunek zakończenia: \n" + getEnding());
-        System.out.print("Wybór: ");
-        int choose = s.nextInt();
-        double bisectionResult, secantResult;
-        int iterations = Integer.MAX_VALUE;
-        double epsilon = -1;
-        switch (choose) {
-            case 1 -> {
-                System.out.print("Podaj liczbę iteracji: ");
-                iterations = s.nextInt();
-            }
-            case 2 -> {
-                System.out.print("Podaj dokładność: ");
-                epsilon = s.nextDouble();
-            }
-            default -> {
-                System.out.println("Wybrano nie prawidłową opcję.");
-                return;
-            }
-        }
-        bisectionResult = Bisection.getZeroPosition(
-                assembledFunction, leftCompartment, rightCompartment, epsilon, iterations);
-        secantResult = SecantMethod.getZeroPosition(
-                assembledFunction, leftCompartment, rightCompartment, epsilon, iterations);
-        System.out.println("Bisekcja: " + bisectionResult);
-        System.out.println("Bisekcja iteracje: " + Bisection.getIteration());
-        System.out.println("Bisekcja epsilon: " + Bisection.getDiff());
-        System.out.println("Metoda siecznych: " + secantResult);
-        System.out.println("Metoda siecznych iteracje: " + SecantMethod.getIteration());
-        System.out.println("Metoda siecznych epsilon: " + SecantMethod.getDiff());
 
         try {
             ChartUtilities.saveChartAsPNG(
                     new File("chart.png"),
                     ChartGenerator.generatePlot(
                             assembledFunction,
-                            leftCompartment, rightCompartment,
-                            bisectionResult, secantResult
+                            assembledFunction,
+                            leftCompartment,
+                            rightCompartment,
+                            nodes
                     ),
                     600, 600
             );
@@ -117,14 +97,8 @@ public class Main {
                 Funckje:\s
                 1 - sin(x)\s
                 2 - a^x\s
-                3 - wielomian (a + bx + cx^2 + ...)""";
-    }
-
-    private static String getEnding() {
-        return """
-                Funckje:\s
-                1 - ilosc iteracji\s
-                2 - dokładność""";
+                3 - wielomian (a + bx + cx^2 + ...)\s
+                4 - |x|""";
     }
 
     private static Function<Double, Double> assemble(Function<Double, Double>[] array) {
