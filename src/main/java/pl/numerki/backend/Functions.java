@@ -5,7 +5,7 @@ import java.util.function.Function;
 public class Functions {
     public static Function<Double, Double> polynomial(double[] factors) {
         return aDouble -> {
-            double result = factors[factors.length-1];
+            double result = factors[factors.length - 1];
             for (int i = factors.length - 2; i >= 0; i--) {
                 result *= aDouble;
                 result += factors[i];
@@ -29,6 +29,15 @@ public class Functions {
             } else {
                 return Math.pow(a, aDouble);
             }
+        };
+    }
+
+    public static Function<Double, Double> absoluteFunction() {
+        return aDouble -> {
+            if (aDouble < 0) {
+                return -aDouble;
+            }
+            return aDouble;
         };
     }
 }
