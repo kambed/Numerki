@@ -1,6 +1,5 @@
 package pl.numerki.backend;
 
-import java.util.Arrays;
 import java.util.function.Function;
 
 public class LagrangeInterpolation {

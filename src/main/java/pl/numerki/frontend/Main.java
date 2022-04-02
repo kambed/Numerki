@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.Scanner;
 import java.util.function.Function;
 
@@ -68,18 +67,18 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         String pathString = scanner.next();
         Path board = Paths.get(pathString);
-        double[] nodes = new double[0];
+        double[] nodesX = new double[0];
         try {
-            nodes = FileOperator.readNodes(board);
+            nodesX = FileOperator.readNodes(board);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        double[] nodesY = new double[nodes.length];
-        for (int i = 0; i < nodes.length; i++) {
-            nodesY[i] = assembledFunction.apply(nodes[i]);
+        double[] nodesY = new double[nodesX.length];
+        for (int i = 0; i < nodesX.length; i++) {
+            nodesY[i] = assembledFunction.apply(nodesX[i]);
         }
-        Function<Double, Double> interpolatedFunction = LagrangeInterpolation.interpolate(nodes, nodesY);
+        Function<Double, Double> interpolatedFunction = LagrangeInterpolation.interpolate(nodesX, nodesY);
 
         try {
             ChartUtilities.saveChartAsPNG(
@@ -89,7 +88,7 @@ public class Main {
                             interpolatedFunction,
                             leftCompartment,
                             rightCompartment,
-                            nodes
+                            nodesX
                     ),
                     600, 600
             );
