@@ -4,27 +4,19 @@ import java.util.function.Function;
 
 public class LagrangeInterpolation {
     public static Function interpolate(double[] x, double[] y) {
-        double[] factors = new double[x.length];
-        for (int i = 0; i < x.length; i++) {
-            double xValues = 1;
-            for (int j = 0; j < x.length; j++) {
-                if (i != j) {
-                    xValues *= x[i] - x[j];
-                }
-            }
-            factors[i] = y[i] / xValues;
-        }
         double[] interpolatedFunctionFactors = new double[x.length];
         for (int i = 0; i < x.length; i++) {
+            double xValues = 1;
             double[] polynomialFactors = {1};
             for (int j = 0; j < x.length; j++) {
                 if (i != j) {
+                    xValues *= x[i] - x[j];
                     double[] multiplyFactors = {-x[j], 1};
                     polynomialFactors = functionMultiPly(polynomialFactors, multiplyFactors);
                 }
             }
             for (int j = 0; j < polynomialFactors.length; j++) {
-                interpolatedFunctionFactors[j] += polynomialFactors[j] * factors[i];
+                interpolatedFunctionFactors[j] += polynomialFactors[j] * y[i] / xValues;
             }
         }
         return Functions.polynomial(interpolatedFunctionFactors);

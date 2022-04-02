@@ -8,7 +8,7 @@ import java.util.List;
 public class FileOperator {
 
     public static double[] readNodes(Path p) throws IOException {
-        if (Files.exists(p)) {
+        if (!Files.exists(p)) {
             return null;
         }
         List<String> lines = Files.readAllLines(p);
