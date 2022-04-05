@@ -28,3 +28,5 @@ jobs:
       run: mvn -B package --file task2/pom.xml
     - name: Run tests with Maven - task 2
       run: mvn -B test --file task2/pom.xml
+    - name: Build with Maven - task 3
+      run: mvn -B package --file task1/pom.xml
