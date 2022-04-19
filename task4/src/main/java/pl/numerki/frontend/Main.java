@@ -1,11 +1,13 @@
 package pl.numerki.frontend;
 
+import pl.numerki.backend.FileOperator;
 import pl.numerki.backend.Functions;
+import pl.numerki.backend.HermiteQuadrature;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.function.Function;
 
@@ -54,14 +56,80 @@ public class Main {
         }
         Function<Double, Double> assembledFunction = assemble(function);
 
-        System.out.println("Podaj przedział testowy");
-        System.out.print("Początek: ");
-        double leftCompartment = s.nextDouble();
-        System.out.print("Koniec: ");
-        double rightCompartment = s.nextDouble();
-
-        System.out.print("Podaj dokładność: ");
+        System.out.print("Podaj dokładność dla metody Newtona-Cotesa: ");
         double epsilon = s.nextDouble();
+
+        double leftCompartment, rightCompartment;
+
+        System.out.println("Czy wykonujemy całkowanie kwadraturą Gausa z wielomianem Hermite'a? (y/n)");
+        String hermite = s.next();
+        switch (hermite) {
+            case "y", "Y" -> {
+                leftCompartment = Double.MIN_VALUE;
+                rightCompartment = Double.MAX_VALUE;
+                System.out.print("Podaj plik z miejscami zerowymi: ");
+                Scanner scanner = new Scanner(System.in);
+                String pathString = scanner.next();
+                Path board = Paths.get(pathString);
+                double[] zeroPositions;
+                try {
+                    zeroPositions = FileOperator.readNodes(board);
+                    if (zeroPositions == null || zeroPositions.length < 2) {
+                        throw new IOException();
+                    }
+                } catch (IOException e) {
+                    System.out.println("Wprowadzono niepoprawne miejsca zerowe");
+                    return;
+                }
+
+                System.out.print("Podaj plik z wagami: ");
+                pathString = scanner.next();
+                board = Paths.get(pathString);
+                double[] weights;
+                try {
+                    weights = FileOperator.readNodes(board);
+                    if (weights == null || weights.length != zeroPositions.length) {
+                        throw new IOException();
+                    }
+                } catch (IOException e) {
+                    System.out.println("Wprowadzono niepoprawne wagi");
+                    return;
+                }
+
+                for (int i = 2; i < (Math.min(weights.length, 6)); i++) {
+                    System.out.println(
+                            "Kwadratura Gausa z wielomianem Hermite'a dla " + i + "węzłów: " +
+                                    "\n    wynik: " +
+                                    HermiteQuadrature.integrate(
+                                            assembledFunction,
+                                            Arrays.copyOfRange(zeroPositions, 0, i),
+                                            Arrays.copyOfRange(weights, 0, i)
+                                    ) +
+                                    "\n    iteracje: " + HermiteQuadrature.iterations
+                    );
+                    assembledFunction = HermiteQuadrature.hermiteWeight(assembledFunction);
+                }
+            }
+            case "n", "N" -> {
+                System.out.println("Podaj przedział testowy");
+                System.out.print("Początek: ");
+                leftCompartment = s.nextDouble();
+                System.out.print("Koniec: ");
+                rightCompartment = s.nextDouble();
+            }
+            default -> {
+                System.out.println("Wprowadzono nieprawidłową wartość");
+                return;
+            }
+        }
+
+        // Add Newton-Cotes after rebase
+        // System.out.println(
+        //                "Kwadratura Newtona-Cotesa: " +
+        //                "\n    wynik: " +
+        //                NewtonCotesQuadrature.integrate(assembledFunction, leftCompartment, rightCompartment, epsilon) +
+        //                "\n    iteracje: " + NewtonCotesQuadrature.iterations
+        // );
     }
 
     private static String getMenu() {

@@ -11,4 +11,5 @@ buildNumber.properties
 .idea/
 *.iml
 resources/
-chart.png
+*.png
+*.txt
