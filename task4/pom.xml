@@ -7,7 +7,7 @@
     <groupId>pl.numerki</groupId>
     <artifactId>numerki</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>Zad 3</name>
+    <name>Zad 4</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
