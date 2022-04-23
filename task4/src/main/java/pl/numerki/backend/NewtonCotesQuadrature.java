@@ -36,7 +36,7 @@ public class NewtonCotesQuadrature {
     ) {
         double sum = 0;
         double compartmentBegin = leftCompartment + jumpBetweenIntervals;
-        for (int i = 1; i < numberOfSubCompartments - 1; i++) {
+        for (int i = 0; i < numberOfSubCompartments - 1; i++) {
             sum += function.apply(compartmentBegin);
             compartmentBegin += jumpBetweenIntervals;
         }
@@ -49,7 +49,7 @@ public class NewtonCotesQuadrature {
     ) {
         double sum = 0;
         double compartmentBegin = leftCompartment;
-        for (int i = 1; i < numberOfSubCompartments - 1; i++) {
+        for (int i = 0; i < numberOfSubCompartments; i++) {
             sum += function.apply(compartmentBegin + (jumpBetweenIntervals / 2.0));
             compartmentBegin += jumpBetweenIntervals;
         }
