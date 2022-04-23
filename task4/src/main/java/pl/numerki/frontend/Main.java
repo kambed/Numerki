@@ -60,9 +60,6 @@ public class Main {
         String hermite = s.next();
         switch (hermite) {
             case "y", "Y" -> {
-                leftCompartment = Double.MIN_VALUE;
-                rightCompartment = Double.MAX_VALUE;
-
                 for (int i = 2; i < 6; i++) {
                     System.out.println(
                             "Kwadratura Gausa z wielomianem Hermite'a dla " + i + " węzłów: " +
@@ -72,6 +69,13 @@ public class Main {
                     );
                     assembledFunction = HermiteQuadrature.hermiteWeight(assembledFunction);
                 }
+
+                System.out.println(
+                        "Kwadratura Newtona-Cotesa: " +
+                                "\n    wynik: " +
+                                NewtonCotesQuadrature.integrateFromMinusInfinityToInfinity(assembledFunction, epsilon) +
+                                "\n    liczba podziałów: " + NewtonCotesQuadrature.numberOfSubCompartments
+                );
             }
             case "n", "N" -> {
                 System.out.println("Podaj przedział testowy");
@@ -79,19 +83,16 @@ public class Main {
                 leftCompartment = s.nextDouble();
                 System.out.print("Koniec: ");
                 rightCompartment = s.nextDouble();
-            }
-            default -> {
-                System.out.println("Wprowadzono nieprawidłową wartość");
-                return;
-            }
-        }
 
-         System.out.println(
-            "Kwadratura Newtona-Cotesa: " +
-            "\n    wynik: " +
-            NewtonCotesQuadrature.integrate(assembledFunction, leftCompartment, rightCompartment, epsilon) +
-            "\n    liczba podziałów: " + NewtonCotesQuadrature.numberOfSubCompartments
-         );
+                System.out.println(
+                        "Kwadratura Newtona-Cotesa: " +
+                                "\n    wynik: " +
+                                NewtonCotesQuadrature.integrate(assembledFunction, leftCompartment, rightCompartment, epsilon) +
+                                "\n    liczba podziałów: " + NewtonCotesQuadrature.numberOfSubCompartments
+                );
+            }
+            default -> System.out.println("Wprowadzono nieprawidłową wartość");
+        }
     }
 
     private static String getMenu() {

@@ -19,6 +19,42 @@ public class NewtonCotesQuadrature {
         return result2;
     }
 
+    public static double integrateFromZeroToInfinity(Function<Double, Double> function, double epsilon) {
+        double result1, result2 = 0;
+        numberOfSubCompartments = 0;
+        int rightCompartment = 1;
+        do {
+            numberOfSubCompartments++;
+            result1 = result2;
+            result2 = simpson(0, rightCompartment, function, 1);
+            rightCompartment += 1;
+        } while (Math.abs(result1 - result2) > epsilon);
+        return result2;
+    }
+
+    public static double integrateFromMinusInfinityToZero(Function<Double, Double> function, double epsilon) {
+        double result1, result2 = 0;
+        numberOfSubCompartments = 0;
+        int rightCompartment = -1;
+        do {
+            numberOfSubCompartments++;
+            result1 = result2;
+            result2 = simpson(0, rightCompartment, function, 1);
+            rightCompartment -= 1;
+        } while (Math.abs(result1 - result2) > epsilon);
+        return result2;
+    }
+
+    public static double integrateFromMinusInfinityToInfinity(Function<Double, Double> function, double epsilon) {
+        double fromMinusInfinityToZero = integrateFromMinusInfinityToZero(function, epsilon);
+        int numberOfSubCompartments = NewtonCotesQuadrature.numberOfSubCompartments;
+
+        double fromZeroToInfinity = integrateFromZeroToInfinity(function, epsilon);
+        NewtonCotesQuadrature.numberOfSubCompartments +=numberOfSubCompartments;
+
+        return fromMinusInfinityToZero + fromZeroToInfinity;
+    }
+
     private static double simpson(
             double leftCompartment, double rightCompartment,
             Function<Double, Double> function, double jumpBetweenIntervals
