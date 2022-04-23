@@ -1,11 +1,8 @@
 package pl.numerki.frontend;
 
 import pl.numerki.backend.Functions;
+import pl.numerki.backend.NewtonCotesQuadrature;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Scanner;
 import java.util.function.Function;
 
@@ -62,6 +59,13 @@ public class Main {
 
         System.out.print("Podaj dokładność: ");
         double epsilon = s.nextDouble();
+
+        System.out.println(
+                "Kwadratura Newtona-Cotesa: " +
+                "\n    wynik: " +
+                NewtonCotesQuadrature.integrate(assembledFunction, leftCompartment, rightCompartment, epsilon) +
+                "\n    liczba podziałów: " + NewtonCotesQuadrature.numberOfSubCompartments
+        );
     }
 
     private static String getMenu() {
