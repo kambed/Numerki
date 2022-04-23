@@ -64,7 +64,7 @@ public class Main {
                 "Kwadratura Newtona-Cotesa: " +
                 "\n    wynik: " +
                 NewtonCotesQuadrature.integrate(assembledFunction, leftCompartment, rightCompartment, epsilon) +
-                "\n    iteracje: " + NewtonCotesQuadrature.iterations
+                "\n    liczba podziałów: " + NewtonCotesQuadrature.numberOfSubCompartments
         );
     }
 
