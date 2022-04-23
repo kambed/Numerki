@@ -2,7 +2,7 @@ package pl.numerki.frontend;
 
 import pl.numerki.backend.Functions;
 import pl.numerki.backend.HermiteQuadrature;
-
+import pl.numerki.backend.NewtonCotesQuadrature;
 import java.util.Scanner;
 import java.util.function.Function;
 
@@ -86,13 +86,12 @@ public class Main {
             }
         }
 
-        // Add Newton-Cotes after rebase
-        // System.out.println(
-        //                "Kwadratura Newtona-Cotesa: " +
-        //                "\n    wynik: " +
-        //                NewtonCotesQuadrature.integrate(assembledFunction, leftCompartment, rightCompartment, epsilon) +
-        //                "\n    iteracje: " + NewtonCotesQuadrature.iterations
-        // );
+         System.out.println(
+            "Kwadratura Newtona-Cotesa: " +
+            "\n    wynik: " +
+            NewtonCotesQuadrature.integrate(assembledFunction, leftCompartment, rightCompartment, epsilon) +
+            "\n    liczba podziałów: " + NewtonCotesQuadrature.numberOfSubCompartments
+         );
     }
 
     private static String getMenu() {
