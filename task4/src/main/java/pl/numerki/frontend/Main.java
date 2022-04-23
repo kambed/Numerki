@@ -56,7 +56,7 @@ public class Main {
 
         double leftCompartment, rightCompartment;
 
-        System.out.println("Czy wykonujemy całkowanie kwadraturą Gausa z wielomianem Hermite'a? (y/n)");
+        System.out.print("Czy wykonujemy całkowanie kwadraturą Gausa z wielomianem Hermite'a? (y/n) ");
         String hermite = s.next();
         switch (hermite) {
             case "y", "Y" -> {
@@ -65,7 +65,7 @@ public class Main {
 
                 for (int i = 2; i < 6; i++) {
                     System.out.println(
-                            "Kwadratura Gausa z wielomianem Hermite'a dla " + i + "węzłów: " +
+                            "Kwadratura Gausa z wielomianem Hermite'a dla " + i + " węzłów: " +
                                     "\n    wynik: " +
                                     HermiteQuadrature.integrate(assembledFunction, i) +
                                     "\n    iteracje: " + HermiteQuadrature.iterations
