@@ -37,6 +37,6 @@ public class HermiteQuadrature {
     }
 
     public static Function<Double, Double> hermiteWeight(Function<Double, Double> function) {
-        return aDouble -> Math.exp(-1 * aDouble * aDouble) * function.apply(aDouble);
+        return aDouble -> (Math.exp(-1 * aDouble * aDouble) * function.apply(aDouble));
     }
 }

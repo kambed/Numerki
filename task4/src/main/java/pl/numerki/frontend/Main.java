@@ -67,13 +67,13 @@ public class Main {
                                     HermiteQuadrature.integrate(assembledFunction, i) +
                                     "\n    iteracje: " + HermiteQuadrature.iterations
                     );
-                    assembledFunction = HermiteQuadrature.hermiteWeight(assembledFunction);
                 }
 
                 System.out.println(
                         "Kwadratura Newtona-Cotesa: " +
                                 "\n    wynik: " +
-                                NewtonCotesQuadrature.integrateFromMinusInfinityToInfinity(assembledFunction, epsilon) +
+                                NewtonCotesQuadrature.integrateFromMinusInfinityToInfinity(
+                                        HermiteQuadrature.hermiteWeight(assembledFunction), epsilon) +
                                 "\n    liczba podziałów: " + NewtonCotesQuadrature.numberOfSubCompartments
                 );
             }
