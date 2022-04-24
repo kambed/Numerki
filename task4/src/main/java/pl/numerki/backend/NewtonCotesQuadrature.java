@@ -12,27 +12,69 @@ public class NewtonCotesQuadrature {
         numberOfSubCompartments = 0;
         do {
             numberOfSubCompartments++;
-            double jumpBetweenIntervals = (rightCompartment - leftCompartment) / numberOfSubCompartments;
             result1 = result2;
-            result2 = simpson(leftCompartment, rightCompartment, function, jumpBetweenIntervals);
+            result2 = simpson(leftCompartment, rightCompartment, function, numberOfSubCompartments);
         } while (Math.abs(result1 - result2) > epsilon);
         return result2;
     }
 
+    public static double integrateFromZeroToInfinity(Function<Double, Double> function, double epsilon) {
+        double result;
+        double sum = 0;
+        numberOfSubCompartments = 0;
+        int rightCompartment = 1;
+        int leftCompartment = 0;
+        do {
+            numberOfSubCompartments++;
+            result = simpson(leftCompartment, rightCompartment, function, 1);
+            sum += result;
+            rightCompartment += 1;
+            leftCompartment += 1;
+        } while (Math.abs(result) > epsilon);
+        return sum;
+    }
+
+    public static double integrateFromMinusInfinityToZero(Function<Double, Double> function, double epsilon) {
+        double result;
+        double sum = 0;
+        numberOfSubCompartments = 0;
+        int rightCompartment = 0;
+        int leftCompartment = -1;
+        do {
+            numberOfSubCompartments++;
+            result = simpson(leftCompartment, rightCompartment, function, 1);
+            sum += result;
+            rightCompartment -= 1;
+            leftCompartment -= 1;
+        } while (Math.abs(result) > epsilon);
+        return sum;
+    }
+
+    public static double integrateFromMinusInfinityToInfinity(Function<Double, Double> function, double epsilon) {
+        double fromMinusInfinityToZero = integrateFromMinusInfinityToZero(function, epsilon);
+        int numberOfSubCompartments = NewtonCotesQuadrature.numberOfSubCompartments;
+
+        double fromZeroToInfinity = integrateFromZeroToInfinity(function, epsilon);
+        NewtonCotesQuadrature.numberOfSubCompartments += numberOfSubCompartments;
+
+        return fromMinusInfinityToZero + fromZeroToInfinity;
+    }
+
     private static double simpson(
             double leftCompartment, double rightCompartment,
-            Function<Double, Double> function, double jumpBetweenIntervals
+            Function<Double, Double> function, int numberOfSubCompartments
     ) {
-        return ((rightCompartment - leftCompartment) / (6 * numberOfSubCompartments)) * (
+        double jumpBetweenIntervals = (rightCompartment - leftCompartment) / numberOfSubCompartments;
+        return ((rightCompartment - leftCompartment) / (6.0 * numberOfSubCompartments)) * (
                 function.apply(leftCompartment) + function.apply(rightCompartment)
-                        + 2 * sumOfTheBeginningsOfTheSubIntervals(function, leftCompartment, jumpBetweenIntervals)
-                        + 4 * sumOfTheMeansOfTheSubIntervals(function, leftCompartment, jumpBetweenIntervals)
+                        + 2.0 * sumOfTheBeginningsOfTheSubIntervals(function, leftCompartment, jumpBetweenIntervals, numberOfSubCompartments)
+                        + 4.0 * sumOfTheMeansOfTheSubIntervals(function, leftCompartment, jumpBetweenIntervals, numberOfSubCompartments)
         );
     }
 
     private static double sumOfTheBeginningsOfTheSubIntervals(
             Function<Double, Double> function,
-            double leftCompartment, double jumpBetweenIntervals
+            double leftCompartment, double jumpBetweenIntervals, int numberOfSubCompartments
     ) {
         double sum = 0;
         double compartmentBegin = leftCompartment + jumpBetweenIntervals;
@@ -45,7 +87,7 @@ public class NewtonCotesQuadrature {
 
     private static double sumOfTheMeansOfTheSubIntervals(
             Function<Double, Double> function,
-            double leftCompartment, double jumpBetweenIntervals
+            double leftCompartment, double jumpBetweenIntervals, int numberOfSubCompartments
     ) {
         double sum = 0;
         double compartmentBegin = leftCompartment;

@@ -1,8 +1,8 @@
 package pl.numerki.frontend;
 
 import pl.numerki.backend.Functions;
+import pl.numerki.backend.HermiteQuadrature;
 import pl.numerki.backend.NewtonCotesQuadrature;
-
 import java.util.Scanner;
 import java.util.function.Function;
 
@@ -51,21 +51,48 @@ public class Main {
         }
         Function<Double, Double> assembledFunction = assemble(function);
 
-        System.out.println("Podaj przedział testowy");
-        System.out.print("Początek: ");
-        double leftCompartment = s.nextDouble();
-        System.out.print("Koniec: ");
-        double rightCompartment = s.nextDouble();
-
-        System.out.print("Podaj dokładność: ");
+        System.out.print("Podaj dokładność dla metody Newtona-Cotesa: ");
         double epsilon = s.nextDouble();
 
-        System.out.println(
-                "Kwadratura Newtona-Cotesa: " +
-                "\n    wynik: " +
-                NewtonCotesQuadrature.integrate(assembledFunction, leftCompartment, rightCompartment, epsilon) +
-                "\n    liczba podziałów: " + NewtonCotesQuadrature.numberOfSubCompartments
-        );
+        double leftCompartment, rightCompartment;
+
+        System.out.print("Czy wykonujemy całkowanie kwadraturą Gausa z wielomianem Hermite'a? (y/n) ");
+        String hermite = s.next();
+        switch (hermite) {
+            case "y", "Y" -> {
+                for (int i = 2; i < 6; i++) {
+                    System.out.println(
+                            "Kwadratura Gausa z wielomianem Hermite'a dla " + i + " węzłów: " +
+                                    "\n    wynik: " +
+                                    HermiteQuadrature.integrate(assembledFunction, i) +
+                                    "\n    iteracje: " + HermiteQuadrature.iterations
+                    );
+                }
+
+                System.out.println(
+                        "Kwadratura Newtona-Cotesa: " +
+                                "\n    wynik: " +
+                                NewtonCotesQuadrature.integrateFromMinusInfinityToInfinity(
+                                        HermiteQuadrature.hermiteWeight(assembledFunction), epsilon) +
+                                "\n    liczba podziałów: " + NewtonCotesQuadrature.numberOfSubCompartments
+                );
+            }
+            case "n", "N" -> {
+                System.out.println("Podaj przedział testowy");
+                System.out.print("Początek: ");
+                leftCompartment = s.nextDouble();
+                System.out.print("Koniec: ");
+                rightCompartment = s.nextDouble();
+
+                System.out.println(
+                        "Kwadratura Newtona-Cotesa: " +
+                                "\n    wynik: " +
+                                NewtonCotesQuadrature.integrate(assembledFunction, leftCompartment, rightCompartment, epsilon) +
+                                "\n    liczba podziałów: " + NewtonCotesQuadrature.numberOfSubCompartments
+                );
+            }
+            default -> System.out.println("Wprowadzono nieprawidłową wartość");
+        }
     }
 
     private static String getMenu() {
