@@ -62,7 +62,7 @@ public class NewtonCotesQuadrature {
 
     private static double simpson(
             double leftCompartment, double rightCompartment,
-            Function<Double, Double> function, double numberOfSubCompartments
+            Function<Double, Double> function, int numberOfSubCompartments
     ) {
         double jumpBetweenIntervals = (rightCompartment - leftCompartment) / numberOfSubCompartments;
         return ((rightCompartment - leftCompartment) / (6.0 * numberOfSubCompartments)) * (
@@ -74,7 +74,7 @@ public class NewtonCotesQuadrature {
 
     private static double sumOfTheBeginningsOfTheSubIntervals(
             Function<Double, Double> function,
-            double leftCompartment, double jumpBetweenIntervals, double numberOfSubCompartments
+            double leftCompartment, double jumpBetweenIntervals, int numberOfSubCompartments
     ) {
         double sum = 0;
         double compartmentBegin = leftCompartment + jumpBetweenIntervals;
@@ -87,7 +87,7 @@ public class NewtonCotesQuadrature {
 
     private static double sumOfTheMeansOfTheSubIntervals(
             Function<Double, Double> function,
-            double leftCompartment, double jumpBetweenIntervals, double numberOfSubCompartments
+            double leftCompartment, double jumpBetweenIntervals, int numberOfSubCompartments
     ) {
         double sum = 0;
         double compartmentBegin = leftCompartment;
