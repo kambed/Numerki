@@ -2,10 +2,9 @@ package pl.numerki.frontend;
 
 import org.jfree.chart.ChartUtilities;
 import pl.numerki.backend.Functions;
+import pl.numerki.backend.HermitePolynomial;
 import pl.numerki.backend.NewtonCotesQuadrature;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Scanner;
 import java.util.function.Function;
 
