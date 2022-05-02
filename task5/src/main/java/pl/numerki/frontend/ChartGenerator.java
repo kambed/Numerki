@@ -16,8 +16,8 @@ public class ChartGenerator {
             Function<Double, Double> function, Function<Double, Double> approximated,
             double leftCompartment, double rightCompartment
     ) {
-        XYSeries functionSeries = new XYSeries("Funkcja");
-        XYSeries approximatedSeries = new XYSeries("Funkcja aproksymowana");
+        XYSeries functionSeries = new XYSeries("Funkcja aproksymowana");
+        XYSeries approximatedSeries = new XYSeries("Funkcja aproksymująca");
         double unit = (rightCompartment - leftCompartment) / 1000;
         double minValue = function.apply(leftCompartment);
         double maxValue = function.apply(leftCompartment);
