@@ -1,8 +1,8 @@
 package pl.numerki.frontend;
 
 import org.jfree.chart.ChartUtilities;
+import pl.numerki.backend.Approxitation;
 import pl.numerki.backend.Functions;
-import pl.numerki.backend.NewtonCotesQuadrature;
 
 import java.io.File;
 import java.io.IOException;
@@ -63,33 +63,40 @@ public class Main {
         rightCompartment = s.nextDouble();
 
         System.out.print("Podaj stopień wielomianu aproksymującego: ");
-        int polynomialDegree = s.nextInt();
+        String degree = new Scanner(System.in).nextLine();
+        Function<Double, Double> approximatedFunction = null;
+        if (degree.equals("auto")) {
+            System.out.print("Podaj dokładność aproksymacji: ");
+            int polynomialDegree = 0;
+            double epsilon = s.nextDouble();
+            do {
+                approximatedFunction = Approxitation.approximate(polynomialDegree, assembledFunction);
+                polynomialDegree++;
+            } while (Approxitation.calculateError(assembledFunction,approximatedFunction,leftCompartment,rightCompartment) > epsilon);
+            System.out.println("Wynik otrzymany dla " + polynomialDegree + " stopnia wielomianu");
+        } else {
+            int polynomialDegree = Integer.parseInt(degree);
+            approximatedFunction = Approxitation.approximate(polynomialDegree, assembledFunction);
+        }
 
-        System.out.print("Podaj dokładność dla metody Newtona-Cotesa: ");
-        double epsilon = s.nextDouble();
 
-        System.out.println(
-                "Kwadratura Newtona-Cotesa: " +
-                        "\n    wynik: " +
-                        NewtonCotesQuadrature.integrate(assembledFunction, leftCompartment, rightCompartment, epsilon) +
-                        "\n    liczba podziałów: " + NewtonCotesQuadrature.numberOfSubCompartments
-        );
+        System.out.println("Oszacowany błąd aproksymacji: " + Approxitation.calculateError(assembledFunction,
+                approximatedFunction, leftCompartment, rightCompartment));
 
-//        try {
-//            ChartUtilities.saveChartAsPNG(
-//                    new File("chart.png"),
-//                    ChartGenerator.generatePlot(
-//                            assembledFunction,
-//                            interpolatedFunction,
-//                            leftCompartment,
-//                            rightCompartment,
-//                            nodesX
-//                    ),
-//                    600, 600
-//            );
-//        } catch (IOException e) {
-//            System.out.println("Wystapił problem przy generowaniu wykresu.");
-//        }
+        try {
+            ChartUtilities.saveChartAsPNG(
+                    new File("chart.png"),
+                    ChartGenerator.generatePlot(
+                            assembledFunction,
+                            approximatedFunction,
+                            leftCompartment,
+                            rightCompartment
+                    ),
+                    600, 600
+            );
+        } catch (IOException e) {
+            System.out.println("Wystapił problem przy generowaniu wykresu.");
+        }
     }
 
     private static String getMenu() {
