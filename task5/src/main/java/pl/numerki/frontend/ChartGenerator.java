@@ -13,18 +13,18 @@ import java.util.function.Function;
 
 public class ChartGenerator {
     public static JFreeChart generatePlot(
-            Function<Double, Double> function, Function<Double, Double> interpolated, double leftCompartment,
-            double rightCompartment, double[] nodes
+            Function<Double, Double> function, Function<Double, Double> approximated,
+            double leftCompartment, double rightCompartment
     ) {
         XYSeries functionSeries = new XYSeries("Funkcja");
-        XYSeries interpolatedSeries = new XYSeries("Funkcja interpolowana");
+        XYSeries approximatedSeries = new XYSeries("Funkcja aproksymowana");
         double unit = (rightCompartment - leftCompartment) / 1000;
         double minValue = function.apply(leftCompartment);
         double maxValue = function.apply(leftCompartment);
         for (double i = leftCompartment; i < rightCompartment; i += unit) {
             double value = function.apply(i);
-            double valueInterpolated = interpolated.apply(i);
-            interpolatedSeries.add(i, valueInterpolated);
+            double valueApproximated = approximated.apply(i);
+            approximatedSeries.add(i, valueApproximated);
             functionSeries.add(i, value);
             if (value < minValue) {
                 minValue = value;
@@ -32,11 +32,12 @@ public class ChartGenerator {
             if (value > maxValue) {
                 maxValue = value;
             }
-        }
-
-        XYSeries nodesSeries = new XYSeries("Węzły");
-        for (double node : nodes) {
-            nodesSeries.add(node, function.apply(node));
+            if (valueApproximated < minValue) {
+                minValue = valueApproximated;
+            }
+            if (valueApproximated > maxValue) {
+                maxValue = valueApproximated;
+            }
         }
 
         XYSeries xAxis = new XYSeries("oś X");
@@ -45,20 +46,19 @@ public class ChartGenerator {
 
         XYSeriesCollection seriesCollection = new XYSeriesCollection();
         seriesCollection.addSeries(functionSeries);
-        seriesCollection.addSeries(interpolatedSeries);
-        seriesCollection.addSeries(nodesSeries);
+        seriesCollection.addSeries(approximatedSeries);
         seriesCollection.addSeries(xAxis);
 
-        if(leftCompartment * rightCompartment < 0) {
-            xAxis.add(0,0);
+        if (leftCompartment * rightCompartment < 0) {
+            xAxis.add(0, 0);
             XYSeries yAxis = new XYSeries("oś Y");
             yAxis.add(0, minValue);
             yAxis.add(0, maxValue);
-            yAxis.add(0,0);
+            yAxis.add(0, 0);
             seriesCollection.addSeries(yAxis);
         }
         JFreeChart chart = ChartFactory.createXYLineChart(
-                "Wykres funckji", "X", "Y", seriesCollection,
+                "Wykres funkcji", "X", "Y", seriesCollection,
                 PlotOrientation.VERTICAL, true, true, false
         );
         XYPlot plot = (XYPlot) chart.getPlot();
@@ -66,9 +66,8 @@ public class ChartGenerator {
 
         changeVisibility(renderer, 0, true);
         changeVisibility(renderer, 1, true);
-        changeVisibility(renderer, 2, false);
+        formatAxis(renderer, 2);
         formatAxis(renderer, 3);
-        formatAxis(renderer, 4);
 
         plot.setRenderer(renderer);
 
