@@ -63,9 +63,25 @@ public class Main {
         rightCompartment = s.nextDouble();
 
         System.out.print("Podaj stopień wielomianu aproksymującego: ");
-        int polynomialDegree = s.nextInt();
+        String degree = new Scanner(System.in).nextLine();
+        Function<Double, Double> approximatedFunction = null;
+        if (degree.equals("auto")) {
+            System.out.print("Podaj dokładność aproksymacji: ");
+            int polynomialDegree = 0;
+            double epsilon = s.nextDouble();
+            do {
+                approximatedFunction = Approxitation.approximate(polynomialDegree, assembledFunction);
+                polynomialDegree++;
+            } while (Approxitation.calculateError(assembledFunction,approximatedFunction,leftCompartment,rightCompartment) > epsilon);
+            System.out.println("Wynik otrzymany dla " + polynomialDegree + " stopnia wielomianu");
+        } else {
+            int polynomialDegree = Integer.parseInt(degree);
+            approximatedFunction = Approxitation.approximate(polynomialDegree, assembledFunction);
+        }
 
-        Function<Double, Double> approximatedFunction = Approxitation.approximate(polynomialDegree, assembledFunction);
+
+        System.out.println("Oszacowany błąd aproksymacji: " + Approxitation.calculateError(assembledFunction,
+                approximatedFunction, leftCompartment, rightCompartment));
 
         try {
             ChartUtilities.saveChartAsPNG(
