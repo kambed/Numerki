@@ -1,7 +1,7 @@
 package pl.numerki.frontend;
 
 import org.jfree.chart.ChartUtilities;
-import pl.numerki.backend.Approxitation;
+import pl.numerki.backend.Approximation;
 import pl.numerki.backend.Functions;
 
 import java.io.File;
@@ -64,23 +64,27 @@ public class Main {
 
         System.out.print("Podaj stopień wielomianu aproksymującego: ");
         String degree = new Scanner(System.in).nextLine();
-        Function<Double, Double> approximatedFunction = null;
+        Function<Double, Double> approximatedFunction;
         if (degree.equals("auto")) {
             System.out.print("Podaj dokładność aproksymacji: ");
             int polynomialDegree = 0;
             double epsilon = s.nextDouble();
             do {
-                approximatedFunction = Approxitation.approximate(polynomialDegree, assembledFunction);
+                approximatedFunction = Approximation.approximate(polynomialDegree, assembledFunction);
                 polynomialDegree++;
-            } while (Approxitation.calculateError(assembledFunction,approximatedFunction,leftCompartment,rightCompartment) > epsilon);
+            } while (
+                    Approximation.calculateError(
+                            assembledFunction, approximatedFunction, leftCompartment, rightCompartment
+                    ) > epsilon
+            );
             System.out.println("Wynik otrzymany dla " + polynomialDegree + " stopnia wielomianu");
         } else {
             int polynomialDegree = Integer.parseInt(degree);
-            approximatedFunction = Approxitation.approximate(polynomialDegree, assembledFunction);
+            approximatedFunction = Approximation.approximate(polynomialDegree, assembledFunction);
         }
 
 
-        System.out.println("Oszacowany błąd aproksymacji: " + Approxitation.calculateError(assembledFunction,
+        System.out.println("Oszacowany błąd aproksymacji: " + Approximation.calculateError(assembledFunction,
                 approximatedFunction, leftCompartment, rightCompartment));
 
         try {
