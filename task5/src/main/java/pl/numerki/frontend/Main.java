@@ -11,6 +11,7 @@ import java.util.function.Function;
 
 public class Main {
     public static void main(String[] args) {
+
         System.out.print("Podaj liczbę złożeń: ");
         Scanner s = new Scanner(System.in);
         int numOfAssemblies = s.nextInt();
@@ -69,14 +70,23 @@ public class Main {
             System.out.print("Podaj dokładność aproksymacji: ");
             int polynomialDegree = 0;
             double epsilon = s.nextDouble();
-            do {
+            double minError = Double.MAX_VALUE;
+            int minIndex = -1;
+
+            for (int i = 0; i < 10; i++) {
                 approximatedFunction = Approximation.approximate(polynomialDegree, assembledFunction);
                 polynomialDegree++;
-            } while (
-                    Approximation.calculateError(
-                            assembledFunction, approximatedFunction, leftCompartment, rightCompartment
-                    ) > epsilon
-            );
+                if (Approximation.calculateError(
+                        assembledFunction, approximatedFunction, leftCompartment, rightCompartment
+                ) < minError) {
+                    minError = Approximation.calculateError(
+                            assembledFunction, approximatedFunction, leftCompartment, rightCompartment);
+                    minIndex = polynomialDegree - 1;
+                }
+            }
+
+            polynomialDegree = minIndex;
+            approximatedFunction = Approximation.approximate(polynomialDegree, assembledFunction);
             System.out.println("Wynik otrzymany dla " + polynomialDegree + " stopnia wielomianu");
         } else {
             int polynomialDegree = Integer.parseInt(degree);
