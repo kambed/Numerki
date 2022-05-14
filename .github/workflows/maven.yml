@@ -5,9 +5,9 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ master,dev,zad2master,master-task-4 ]
+    branches: [ master,dev,zad2master,master-task-4,master-task-5 ]
   pull_request:
-    branches: [ master,dev,zad2master,master-task-4 ]
+    branches: [ master,dev,zad2master,master-task-4,master-task-5 ]
 
 jobs:
   build:
@@ -32,3 +32,5 @@ jobs:
       run: mvn -B package --file task3/pom.xml
     - name: Build with Maven - task 4
       run: mvn -B package --file task4/pom.xml
+    - name: Build with Maven - task 5
+      run: mvn -B package --file task5/pom.xml
